@@ -12,15 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".StartActivity">
+        <activity
+            android:name=".StartActivity"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/StartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask" />
 
     </application>
 
