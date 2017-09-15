@@ -1,10 +1,14 @@
-package com.wt.apkinfo;
+package com.wt.apkinfo.activity;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
+
+import com.wt.apkinfo.BuildConfig;
+import com.wt.apkinfo.R;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -12,6 +16,7 @@ public class StartActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
+		((TextView) findViewById(R.id.info)).setText(getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME);
 	}
 
 	@Override
