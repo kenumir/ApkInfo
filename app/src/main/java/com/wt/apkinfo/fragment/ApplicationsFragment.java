@@ -3,6 +3,7 @@ package com.wt.apkinfo.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,9 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
+import com.wt.apkinfo.activity.ApplicationDetailsActivity;
 import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
@@ -41,9 +46,9 @@ public class ApplicationsFragment extends Fragment {
 	@BindView(R2.id.recycler) RecyclerView recycler;
 	@BindView(R2.id.searchEdit) EditText searchEdit;
 	@BindView(R2.id.overlayFrame) FrameLayout overlayFrame;
+	@BindView(R2.id.toolbar) Toolbar toolbar;
 
 	private ApplicationsListAdapter adapter;
-	private ApplicationListViewModel viewModel;
 
 	public ApplicationsFragment() {
 		// Required empty public constructor
@@ -53,15 +58,24 @@ public class ApplicationsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View res = inflater.inflate(R.layout.fragment_applications, container, false);;
 		ButterKnife.bind(this, res);
+		searchEdit.setText(
+			ViewModelProviders.of(getActivity())
+				.get(ApplicationListViewModel.class)
+				.getFilter()
+		);
 		searchEdit.addTextChangedListener(new TextWatcher() {
 			private String searchText = null;
 			private Runnable delay = new Runnable() {
 				@Override
 				public void run() {
-					if (BuildConfig.DEBUG) {
-						Console.logd("search: " + searchText);
+					if (isAdded()) {
+						if (BuildConfig.DEBUG) {
+							Console.logd("search: " + searchText);
+						}
+						ViewModelProviders.of(getActivity())
+								.get(ApplicationListViewModel.class)
+								.search(searchText);
 					}
-					viewModel.search(searchText);
 				}
 			};
 			private Handler h = new Handler(Looper.getMainLooper());
@@ -81,6 +95,26 @@ public class ApplicationsFragment extends Fragment {
 				h.postDelayed(delay, 300);
 			}
 		});
+		Menu menu = toolbar.getMenu();
+		menu
+			.add("Search")
+			.setIcon(R.drawable.ic_search_white_24dp)
+			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem menuItem) {
+					return false;
+				}
+			})
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu
+			.add("About")
+			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem menuItem) {
+					return false;
+				}
+			})
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		return res;
 	}
 
@@ -88,12 +122,18 @@ public class ApplicationsFragment extends Fragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (adapter == null) {
-			adapter = new ApplicationsListAdapter();
-
+			adapter = new ApplicationsListAdapter(new OnItemClick() {
+				@Override
+				public void onItemClick(View v, ApplicationEntity item) {
+					Intent it = new Intent(getActivity(), ApplicationDetailsActivity.class);
+					it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, item.getId());
+					startActivity(it);
+				}
+			});
 		}
 		recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		recycler.setAdapter(adapter);
-		viewModel = ViewModelProviders.of(this).get(ApplicationListViewModel.class);
+		ApplicationListViewModel viewModel = ViewModelProviders.of(getActivity()).get(ApplicationListViewModel.class);
 		viewModel.setup(null);
 		viewModel.getApplications().observe(this, new Observer<List<ApplicationEntity>>() {
 			@Override
@@ -109,9 +149,18 @@ public class ApplicationsFragment extends Fragment {
 		});
 	}
 
-	private class ApplicationsListAdapter extends RecyclerView.Adapter<ApplicationsItemHolder> {
+	private interface OnItemClick {
+		void onItemClick(View v, ApplicationEntity item);
+	}
+
+	private static class ApplicationsListAdapter extends RecyclerView.Adapter<ApplicationsItemHolder> {
 
 		private List<ApplicationEntity> mData;
+		private OnItemClick mOnItemClick;
+
+		ApplicationsListAdapter(OnItemClick click) {
+			mOnItemClick = click;
+		}
 
 		public void setData(List<ApplicationEntity> d) {
 			mData = d;
@@ -125,10 +174,18 @@ public class ApplicationsFragment extends Fragment {
 
 		@Override
 		public void onBindViewHolder(ApplicationsItemHolder holder, int position) {
-			ApplicationEntity entry = mData.get(position);
+			final ApplicationEntity entry = mData.get(position);
 			holder.text1.setText(entry.getName());
 			holder.text2.setText(entry.getId());
 			holder.icon1.setImageDrawable(entry.getIcon());
+			holder.itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if (mOnItemClick != null) {
+						mOnItemClick.onItemClick(view, entry);
+					}
+				}
+			});
 		}
 
 		@Override

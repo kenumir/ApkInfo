@@ -56,6 +56,10 @@ public class DatabaseCreator {
 		return data;
 	}
 
+	public String getFilter() {
+		return filter;
+	}
+
 	public void filterResult(Context context, @Nullable String f) {
 		filter = f;
 
@@ -74,9 +78,9 @@ public class DatabaseCreator {
 				mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 				PackageManager pm = context.getPackageManager();
 				List<ResolveInfo> pkgAppsList = pm.queryIntentActivities(mainIntent, 0);
+				List<ApplicationEntity> list = new ArrayList<>();
 
 				if (pkgAppsList != null && pkgAppsList.size() > 0) {
-					List<ApplicationEntity> list = new ArrayList<>();
 
 					for(ResolveInfo ri : pkgAppsList) {
 						ApplicationEntity e = new ApplicationEntity();
@@ -102,11 +106,9 @@ public class DatabaseCreator {
 					//} catch (InterruptedException e) {
 					//	return null;
 					//}
-
-					return list;
 				}
 
-				return null;
+				return list;
 			}
 
 			@Override

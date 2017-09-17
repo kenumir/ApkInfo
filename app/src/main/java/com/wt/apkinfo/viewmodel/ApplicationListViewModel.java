@@ -22,14 +22,12 @@ import java.util.List;
 public class ApplicationListViewModel extends AndroidViewModel {
 
 	private final LiveData<List<ApplicationEntity>> mObservableProducts;
-	private String filter = null;
 	private DatabaseCreator databaseCreator;
 
 	public ApplicationListViewModel(Application application) {
 		super(application);
 		databaseCreator = DatabaseCreator.getInstance();
-		LiveData<Boolean> databaseCreated = databaseCreator.isDatabaseCreated();
-		mObservableProducts = Transformations.switchMap(databaseCreated,
+		mObservableProducts = Transformations.switchMap(databaseCreator.isDatabaseCreated(),
 				new Function<Boolean, LiveData<List<ApplicationEntity>>>() {
 					@Override
 					public LiveData<List<ApplicationEntity>> apply(Boolean isDbCreated) {
@@ -43,19 +41,21 @@ public class ApplicationListViewModel extends AndroidViewModel {
 	}
 
 	public ApplicationListViewModel search(String f) {
-		filter = f;
-		databaseCreator.filterResult(this.getApplication(), filter);
+		databaseCreator.filterResult(this.getApplication(), f);
 		return this;
 	}
 
 	public ApplicationListViewModel setup(String f) {
-		filter = f;
-		databaseCreator.createDb(this.getApplication(), filter);
+		databaseCreator.createDb(this.getApplication(), f);
 		return this;
 	}
 
 	public LiveData<List<ApplicationEntity>> getApplications() {
 		return mObservableProducts;
+	}
+
+	public String getFilter() {
+		return databaseCreator.getFilter();
 	}
 
 }

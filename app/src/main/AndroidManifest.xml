@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".App">
+        android:name=".App"
+        android:fullBackupContent="@xml/app_backup_rules">
 
         <activity
             android:name=".activity.StartActivity"
@@ -26,8 +27,10 @@
         </activity>
 
         <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="singleTask" />
+            android:name=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.ApplicationDetailsActivity" />
 
     </application>
 

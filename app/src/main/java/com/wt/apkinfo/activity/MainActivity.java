@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import com.google.firebase.perf.metrics.AddTrace;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 	@BindView(R2.id.mainFrame) FrameLayout mainFrame;
 
 	@Override
+	@AddTrace(name = "MainActivity_onCreate")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
