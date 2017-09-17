@@ -4,6 +4,7 @@
 .bak
 /build
 /captures
+/release_certificate
 
 # Android Studio
 *.iml

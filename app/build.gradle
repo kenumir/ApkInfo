@@ -32,6 +32,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        resConfigs "en", "pl"
+        vectorDrawables.useSupportLibrary = true
+
+        buildConfigField "long", "APP_BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
     }
 
     signingConfigs {
@@ -41,6 +46,15 @@ android {
             keyAlias "debug_certificate"
             keyPassword "android"
         }
+        releaseKeystore {
+            Properties props = new Properties()
+            props.load(new FileInputStream("local.properties"))
+
+            storeFile file("../release_certificate/release_certificate.jks")
+            keyAlias props.get('SIGN_ALIAS', '')
+            storePassword props.get('SING_STORE_PASS', '')
+            keyPassword props.get('SIGN_ALIAS_PASS', '')
+        }
     }
 
     buildTypes {
@@ -48,8 +62,25 @@ android {
             signingConfig signingConfigs.debugKeystore
         }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            signingConfig signingConfigs.releaseKeystore
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard/proguard-rules.pro',
+                    'proguard/otto.pro',
+                    'proguard/retrofit.pro',
+                    'proguard/okio.pro',
+                    'proguard/crashlytics.pro',
+                    'proguard/support_design.pro',
+                    'proguard/support_v7.pro',
+                    'proguard/picasso.pro',
+                    'proguard/android.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    //noinspection GroovyAssignabilityCheck
+                    output.outputFile = new File(output.outputFile.parent, "ApkInfo-" + variant.buildType.name + "-" + defaultConfig.versionName + " [" + defaultConfig.versionCode + "].apk")
+                }
+            }
         }
     }
 
