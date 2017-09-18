@@ -91,6 +91,8 @@ public class DatabaseCreator {
 							continue;
 						}
 
+						Console.logi("SRC=" + ri.activityInfo.applicationInfo.publicSourceDir);
+
 						if (ri.activityInfo.icon == 0) {
 							e.icon = ri.activityInfo.applicationInfo.loadIcon(pm);
 						} else {
