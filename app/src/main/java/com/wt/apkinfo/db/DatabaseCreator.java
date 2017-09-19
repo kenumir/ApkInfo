@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
+import com.wt.apkinfo.entity.ApplicationDetailsEntity;
 import com.wt.apkinfo.entity.ApplicationEntity;
 
 import java.util.ArrayList;
@@ -46,7 +48,9 @@ public class DatabaseCreator {
 	private final ExecutorService exec = Executors.newSingleThreadExecutor();
 
 	private MutableLiveData<List<ApplicationEntity>> data = new MutableLiveData<>();
+	private MutableLiveData<ApplicationDetailsEntity> dataApp = new MutableLiveData<>();
 	private String filter = null;
+	private String appId = null;
 
 	public LiveData<Boolean> isDatabaseCreated() {
 		return mIsDatabaseCreated;
@@ -56,8 +60,67 @@ public class DatabaseCreator {
 		return data;
 	}
 
+	public LiveData<ApplicationDetailsEntity> getApplicationDetailsEntity() {
+		return dataApp;
+	}
+
 	public String getFilter() {
 		return filter;
+	}
+
+	public void fetchAppInfo(Context context, @Nullable String appIdx) {
+		this.appId = appIdx;
+
+		mIsDatabaseCreated.setValue(false);// Trigger an update to show a loading screen.
+		new AsyncTask<Context, Void, ApplicationDetailsEntity>() {
+
+			@Override
+			protected ApplicationDetailsEntity doInBackground(Context... params) {
+				Context context = params[0].getApplicationContext();
+				ApplicationDetailsEntity result = new ApplicationDetailsEntity();
+				if (BuildConfig.DEBUG) {
+					Console.logi("DatabaseCreator: start load item with appId=" + appId);
+				}
+
+				PackageManager pm = context.getPackageManager();
+				try {
+					PackageInfo pi = pm.getPackageInfo(appId,
+							PackageManager.GET_ACTIVITIES |
+									PackageManager.GET_CONFIGURATIONS |
+									PackageManager.GET_INTENT_FILTERS |
+									PackageManager.GET_PERMISSIONS |
+									PackageManager.GET_META_DATA |
+									PackageManager.GET_PROVIDERS |
+									PackageManager.GET_RECEIVERS |
+									PackageManager.GET_SERVICES |
+									PackageManager.GET_SIGNATURES |
+									PackageManager.GET_URI_PERMISSION_PATTERNS |
+									PackageManager.GET_INSTRUMENTATION |
+									PackageManager.GET_SHARED_LIBRARY_FILES
+					);
+					result.id = appId;
+					result.name = pi.applicationInfo.loadLabel(pm).toString();
+					result.icon = pi.applicationInfo.loadIcon(pm);
+
+					Console.logi("APK: " + pi.applicationInfo.publicSourceDir);
+					Console.logi("metaData: " + pi.applicationInfo.metaData);
+					Console.logi("firstInstallTime: " + pi.firstInstallTime);
+					Console.logi("lastUpdateTime: " + pi.lastUpdateTime);
+					Console.logi("versionName: " + pi.versionName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				return result;
+			}
+
+			@Override
+			protected void onPostExecute(ApplicationDetailsEntity vv) {
+				// Now on the main thread, notify observers that the db is created and ready.
+				mIsDatabaseCreated.setValue(true);
+				dataApp.setValue(vv);
+			}
+		}.executeOnExecutor(exec, context.getApplicationContext());
 	}
 
 	public void filterResult(Context context, @Nullable String f) {
