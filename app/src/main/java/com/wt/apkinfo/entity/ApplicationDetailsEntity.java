@@ -1,5 +1,6 @@
 package com.wt.apkinfo.entity;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
@@ -16,6 +17,8 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	public String id;
 	public String name;
 	public Drawable icon;
+	public Drawable icon36dp;
+	public ComponentInfo[] activities;
 
 	@Override
 	public String getId() {
@@ -30,6 +33,11 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	@Override
 	public Drawable getIcon() {
 		return icon;
+	}
+
+	@Override
+	public Drawable getIcon36dp() {
+		return icon36dp;
 	}
 
 }

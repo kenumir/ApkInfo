@@ -7,4 +7,7 @@
     <color name="start_activity_bg">#FFFFFFFF</color>
     <color name="app_icon_color">#ff3d00</color>
     <color name="app_icon_color_dark">#C22E00</color>
+
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#B1B1B1</color>
 </resources>

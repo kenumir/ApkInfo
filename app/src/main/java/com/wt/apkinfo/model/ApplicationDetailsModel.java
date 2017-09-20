@@ -1,5 +1,6 @@
 package com.wt.apkinfo.model;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 /**
@@ -12,5 +13,6 @@ public interface ApplicationDetailsModel {
 	String getId();
 	String getName();
 	Drawable getIcon();
+	Drawable getIcon36dp();
 
 }

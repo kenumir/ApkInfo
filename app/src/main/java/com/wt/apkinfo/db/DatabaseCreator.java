@@ -4,9 +4,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
@@ -14,6 +17,8 @@ import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
 import com.wt.apkinfo.entity.ApplicationEntity;
+import com.wt.apkinfo.entity.ComponentInfo;
+import com.wt.apkinfo.util.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,28 +90,48 @@ public class DatabaseCreator {
 				PackageManager pm = context.getPackageManager();
 				try {
 					PackageInfo pi = pm.getPackageInfo(appId,
-							PackageManager.GET_ACTIVITIES |
-									PackageManager.GET_CONFIGURATIONS |
-									PackageManager.GET_INTENT_FILTERS |
-									PackageManager.GET_PERMISSIONS |
-									PackageManager.GET_META_DATA |
-									PackageManager.GET_PROVIDERS |
-									PackageManager.GET_RECEIVERS |
-									PackageManager.GET_SERVICES |
-									PackageManager.GET_SIGNATURES |
-									PackageManager.GET_URI_PERMISSION_PATTERNS |
-									PackageManager.GET_INSTRUMENTATION |
-									PackageManager.GET_SHARED_LIBRARY_FILES
+						PackageManager.GET_ACTIVITIES |
+						PackageManager.GET_CONFIGURATIONS |
+						PackageManager.GET_INTENT_FILTERS |
+						PackageManager.GET_PERMISSIONS |
+						PackageManager.GET_META_DATA |
+						PackageManager.GET_PROVIDERS |
+						PackageManager.GET_RECEIVERS |
+						PackageManager.GET_SERVICES |
+						PackageManager.GET_SIGNATURES |
+						PackageManager.GET_URI_PERMISSION_PATTERNS |
+						PackageManager.GET_INSTRUMENTATION |
+						PackageManager.GET_SHARED_LIBRARY_FILES
 					);
 					result.id = appId;
 					result.name = pi.applicationInfo.loadLabel(pm).toString();
 					result.icon = pi.applicationInfo.loadIcon(pm);
 
-					Console.logi("APK: " + pi.applicationInfo.publicSourceDir);
-					Console.logi("metaData: " + pi.applicationInfo.metaData);
-					Console.logi("firstInstallTime: " + pi.firstInstallTime);
-					Console.logi("lastUpdateTime: " + pi.lastUpdateTime);
-					Console.logi("versionName: " + pi.versionName);
+					Bitmap src = BitmapUtil.drawableToBitmap(result.icon);
+					int dp36 = (int) (context.getResources().getDisplayMetrics().density * 36f);
+					result.icon36dp = BitmapUtil.bitmapToDrawable(context, Bitmap.createScaledBitmap(src, dp36, dp36, true));
+
+					if (pi.activities != null) {
+						result.activities = new ComponentInfo[pi.activities.length];
+						int counter = 0;
+						for(ActivityInfo ai : pi.activities) {
+							ComponentInfo ci  = new ComponentInfo();
+							ci.className = ai.name;
+							ci.name = ai.loadLabel(pm).toString();
+							result.activities[counter] = ci;
+							counter++;
+							Console.logi("add " + ci);
+						}
+					}
+
+
+					//src.recycle();
+
+					//Console.logi("APK: " + pi.applicationInfo.publicSourceDir);
+					//Console.logi("metaData: " + pi.applicationInfo.metaData);
+					//Console.logi("firstInstallTime: " + pi.firstInstallTime);
+					//Console.logi("lastUpdateTime: " + pi.lastUpdateTime);
+					//Console.logi("versionName: " + pi.versionName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
