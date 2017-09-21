@@ -136,9 +136,21 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
 
 		public void setData(ApplicationDetailsEntity entity) {
 			data.clear();
+			if (entity.permissions != null) {
+				data.add(new ItemHeader("Permissions (" + entity.permissions.length + ")"));
+			}
 			if (entity.activities != null) {
 				data.add(new ItemHeader("Activities (" + entity.activities.length + ")"));
-				Collections.addAll(data, entity.activities);
+				//Collections.addAll(data, entity.activities);
+			}
+			if (entity.services != null) {
+				data.add(new ItemHeader("Services (" + entity.services.length + ")"));
+			}
+			if (entity.providers != null) {
+				data.add(new ItemHeader("Providers (" + entity.providers.length + ")"));
+			}
+			if (entity.receivers != null) {
+				data.add(new ItemHeader("Receivers (" + entity.receivers.length + ")"));
 			}
 			notifyDataSetChanged();
 		}

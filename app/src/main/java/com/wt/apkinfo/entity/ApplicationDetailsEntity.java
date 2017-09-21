@@ -19,6 +19,10 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	public Drawable icon;
 	public Drawable icon36dp;
 	public ComponentInfo[] activities;
+	public ComponentInfo[] services;
+	public ComponentInfo[] permissions;
+	public ComponentInfo[] providers;
+	public ComponentInfo[] receivers;
 
 	@Override
 	public String getId() {

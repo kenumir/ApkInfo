@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
+import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -111,16 +114,63 @@ public class DatabaseCreator {
 					int dp36 = (int) (context.getResources().getDisplayMetrics().density * 36f);
 					result.icon36dp = BitmapUtil.bitmapToDrawable(context, Bitmap.createScaledBitmap(src, dp36, dp36, true));
 
+					int counter = 0;
 					if (pi.activities != null) {
 						result.activities = new ComponentInfo[pi.activities.length];
-						int counter = 0;
 						for(ActivityInfo ai : pi.activities) {
 							ComponentInfo ci  = new ComponentInfo();
 							ci.className = ai.name;
 							ci.name = ai.loadLabel(pm).toString();
 							result.activities[counter] = ci;
 							counter++;
-							Console.logi("add " + ci);
+						}
+					}
+
+					if (pi.services != null) {
+						counter = 0;
+						result.services = new ComponentInfo[pi.services.length];
+						for(ServiceInfo ai : pi.services) {
+							ComponentInfo ci  = new ComponentInfo();
+							ci.className = ai.name;
+							ci.name = ai.loadLabel(pm).toString();
+							result.services[counter] = ci;
+							counter++;
+						}
+					}
+
+					if (pi.permissions != null) {
+						counter = 0;
+						result.permissions = new ComponentInfo[pi.permissions.length];
+						for(PermissionInfo ai : pi.permissions) {
+							ComponentInfo ci  = new ComponentInfo();
+							ci.className = ai.name;
+							ci.name = ai.loadLabel(pm).toString();
+							result.permissions[counter] = ci;
+							counter++;
+						}
+					}
+
+					if (pi.providers != null) {
+						counter = 0;
+						result.providers = new ComponentInfo[pi.providers.length];
+						for(ProviderInfo ai : pi.providers) {
+							ComponentInfo ci  = new ComponentInfo();
+							ci.className = ai.name;
+							ci.name = ai.loadLabel(pm).toString();
+							result.providers[counter] = ci;
+							counter++;
+						}
+					}
+
+					if (pi.receivers != null) {
+						counter = 0;
+						result.receivers = new ComponentInfo[pi.receivers.length];
+						for(ActivityInfo ai : pi.receivers) {
+							ComponentInfo ci  = new ComponentInfo();
+							ci.className = ai.name;
+							ci.name = ai.loadLabel(pm).toString();
+							result.receivers[counter] = ci;
+							counter++;
 						}
 					}
 
