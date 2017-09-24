@@ -1,8 +1,0 @@
-<resources>
-
-    <style name="AppDetailsToolbar">
-        <item name="collapsedTitleGravity">end</item>
-        <item name="expandedTitleGravity">end|bottom</item>
-    </style>
-
-</resources>

@@ -11,8 +11,8 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
@@ -23,9 +23,12 @@ import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.entity.ComponentInfo;
 import com.wt.apkinfo.util.BitmapUtil;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -114,8 +117,32 @@ public class DatabaseCreator {
 					int dp36 = (int) (context.getResources().getDisplayMetrics().density * 36f);
 					result.icon36dp = BitmapUtil.bitmapToDrawable(context, Bitmap.createScaledBitmap(src, dp36, dp36, true));
 
-					int counter = 0;
+					int counter;
+
+					result.versionName = pi.versionName;
+					result.versionCode = pi.versionCode;
+					result.firstInstallTime = pi.firstInstallTime;
+					result.lastUpdateTime = pi.lastUpdateTime;
+					result.apkFile = pi.applicationInfo.publicSourceDir;
+
+					if (pi.signatures != null) {
+						counter = 0;
+						MessageDigest md = MessageDigest.getInstance("SHA");
+						result.signatures = new String[pi.signatures.length];
+						for(Signature ai : pi.signatures) {
+							md.update(ai.toByteArray());
+							String s = "";
+							for(byte b : md.digest()) {
+								s += ":" + String.format("%02x", b);
+							}
+							result.signatures[counter] = s.substring(1).toUpperCase(Locale.US);
+							counter++;
+						}
+					}
+
+
 					if (pi.activities != null) {
+						counter = 0;
 						result.activities = new ComponentInfo[pi.activities.length];
 						for(ActivityInfo ai : pi.activities) {
 							ComponentInfo ci  = new ComponentInfo();
@@ -140,7 +167,20 @@ public class DatabaseCreator {
 
 					if (pi.permissions != null) {
 						counter = 0;
-						result.permissions = new ComponentInfo[pi.permissions.length];
+						int all = pi.permissions.length;
+						if (pi.requestedPermissions != null) {
+							all += pi.requestedPermissions.length;
+						}
+						result.permissions = new ComponentInfo[all];
+						if (pi.requestedPermissions != null) {
+							for(String p : pi.requestedPermissions) {
+								ComponentInfo ci  = new ComponentInfo();
+								ci.className = p;
+								ci.name = p;
+								result.permissions[counter] = ci;
+								counter++;
+							}
+						}
 						for(PermissionInfo ai : pi.permissions) {
 							ComponentInfo ci  = new ComponentInfo();
 							ci.className = ai.name;
@@ -174,14 +214,26 @@ public class DatabaseCreator {
 						}
 					}
 
+					if (pi.applicationInfo.metaData != null) {
+						counter = 0;
+						Set<String> keys =  pi.applicationInfo.metaData.keySet();
+						result.metadata = new ComponentInfo[keys.size()];
+						for (String key : keys) {
+							Object o = pi.applicationInfo.metaData.get(key);
+							if (o != null) {
+								ComponentInfo ci = new ComponentInfo();
+								ci.className = o.toString();
+								ci.name = key;
+								result.metadata[counter] = ci;
+								counter++;
+							}
+						}
+					}
 
 					//src.recycle();
 
 					//Console.logi("APK: " + pi.applicationInfo.publicSourceDir);
 					//Console.logi("metaData: " + pi.applicationInfo.metaData);
-					//Console.logi("firstInstallTime: " + pi.firstInstallTime);
-					//Console.logi("lastUpdateTime: " + pi.lastUpdateTime);
-					//Console.logi("versionName: " + pi.versionName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -229,7 +281,7 @@ public class DatabaseCreator {
 							continue;
 						}
 
-						Console.logi("SRC=" + ri.activityInfo.applicationInfo.publicSourceDir);
+						//Console.logi("SRC=" + ri.activityInfo.applicationInfo.publicSourceDir);
 
 						if (ri.activityInfo.icon == 0) {
 							e.icon = ri.activityInfo.applicationInfo.loadIcon(pm);

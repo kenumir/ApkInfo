@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,19 +19,21 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
 import com.wt.apkinfo.entity.ApplicationEntity;
+import com.wt.apkinfo.util.IntentHelper;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
 import java.util.List;
@@ -56,7 +59,7 @@ public class ApplicationsFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View res = inflater.inflate(R.layout.fragment_applications, container, false);;
+		View res = inflater.inflate(R.layout.fragment_applications, container, false);
 		ButterKnife.bind(this, res);
 		searchEdit.setText(
 			ViewModelProviders.of(getActivity())
@@ -96,6 +99,7 @@ public class ApplicationsFragment extends Fragment {
 			}
 		});
 		Menu menu = toolbar.getMenu();
+		/*
 		menu
 			.add("Search")
 			.setIcon(R.drawable.ic_search_white_24dp)
@@ -106,11 +110,25 @@ public class ApplicationsFragment extends Fragment {
 				}
 			})
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			*/
 		menu
-			.add("About")
+			.add(R.string.main_menu_about)
 			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 				@Override
 				public boolean onMenuItemClick(MenuItem menuItem) {
+					new MaterialDialog.Builder(getActivity())
+							.title(R.string.about_title)
+							.content(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
+							.positiveText(R.string.label_close)
+							.neutralText(R.string.about_open)
+							.onNeutral(new MaterialDialog.SingleButtonCallback() {
+								@Override
+								public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+									IntentHelper.openInBrowser(getActivity(), "https://plus.google.com/u/0/+Micha%C5%82Szwarc");
+								}
+							})
+							.build()
+							.show();
 					return false;
 				}
 			})

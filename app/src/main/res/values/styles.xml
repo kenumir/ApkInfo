@@ -12,11 +12,6 @@
         <item name="android:windowBackground">@drawable/app_start_logo</item>
     </style>
 
-    <style name="AppDetailsToolbar">
-        <item name="collapsedTitleGravity">start</item>
-        <item name="expandedTitleGravity">start|bottom</item>
-    </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>

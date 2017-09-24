@@ -1,11 +1,8 @@
 package com.wt.apkinfo.entity;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 
 import com.wt.apkinfo.model.ApplicationDetailsModel;
-import com.wt.apkinfo.model.ApplicationModel;
 
 /**
  * Created by kenumir on 15.09.2017.
@@ -23,6 +20,13 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	public ComponentInfo[] permissions;
 	public ComponentInfo[] providers;
 	public ComponentInfo[] receivers;
+	public ComponentInfo[] metadata;
+	public String[] signatures;
+	public String versionName;
+	public int versionCode;
+	public long firstInstallTime;
+	public long lastUpdateTime;
+	public String apkFile;
 
 	@Override
 	public String getId() {

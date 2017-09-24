@@ -1,0 +1,7 @@
+ext.versions = [
+        supportLib: '26.1.0',
+        firebase: '11.2.2',
+        butterknife: '8.8.1',
+        lifecycle: '1.0.0-alpha9-1',
+        materialDialogs: '0.9.4.7'
+]

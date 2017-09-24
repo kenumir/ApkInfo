@@ -1,6 +1,32 @@
 <resources>
     <string name="app_name">Apk Info</string>
+    <string name="label_close">Close</string>
+
+
+    <!-- main activity -->
+    <string name="main_menu_about">About</string>
+
+
+    <!-- about -->
+    <string name="about_title">About app</string>
+    <string name="about_desc">Apk Info v%s\nAuyhor: Michał (Kenumir) Szwarc\nContact: https://plus.google.com/u/0/+MichałSzwarc</string>
+    <string name="about_open">Google+</string>
+
 
     <!-- Application details -->
     <string name="app_details_title">Application Info</string>
+    <string name="app_details_version_name">Version name</string>
+    <string name="app_details_version_code">Version code</string>
+    <string name="app_details_installation_time">Installation time</string>
+    <string name="app_details_update_time">Update time</string>
+    <string name="app_details_signature">Signature</string>
+    <string name="app_details_meta">App Metadata (%d)</string>
+    <string name="app_details_permissions">Permissions (%d)</string>
+    <string name="app_details_activities">Activities (%d)</string>
+    <string name="app_details_services">Services (%d)</string>
+    <string name="app_details_receivers">Receivers (%d)</string>
+    <string name="app_details_providers">Providers (%d)</string>
+    <string name="app_details_toast_load_info">Error load application info</string>
+    <string name="app_details_toast_copied_to_clipboard">Copied to clipboard</string>
+
 </resources>
