@@ -28,5 +28,6 @@
     <string name="app_details_providers">Providers (%d)</string>
     <string name="app_details_toast_load_info">Error load application info</string>
     <string name="app_details_toast_copied_to_clipboard">Copied to clipboard</string>
+    <string name="app_details_share">Share APK file</string>
 
 </resources>

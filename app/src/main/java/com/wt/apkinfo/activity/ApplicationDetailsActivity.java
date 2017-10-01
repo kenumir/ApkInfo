@@ -5,7 +5,9 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +17,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
@@ -29,6 +33,7 @@ import com.wt.apkinfo.entity.ComponentInfo;
 import com.wt.apkinfo.util.DateTime;
 import com.wt.apkinfo.viewmodel.ApplicationDetailsViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +56,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 	private AppInfoAdapter mAppInfoAdapter;
 	private ComponentInfo[] selectedData;
 	private String appId;
+	private MenuItem shareMenuItem;
 
 	@Override
 	@AddTrace(name = "ApplicationDetailsActivity_onCreate")
@@ -65,17 +71,37 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 		appId = getIntent().getStringExtra(KEY_APP_ID);
 
+		shareMenuItem = toolbar.getMenu().add(R.string.app_details_share).setVisible(false);
+
 		ApplicationDetailsViewModel.Factory factory = new ApplicationDetailsViewModel.Factory(getApplication(), appId);
 		final ApplicationDetailsViewModel model = ViewModelProviders.of(this, factory).get(ApplicationDetailsViewModel.class);
 		model.getApplicationDetails().observe(this, new Observer<ApplicationDetailsEntity>() {
 			@Override
-			public void onChanged(@Nullable ApplicationDetailsEntity productEntity) {
+			public void onChanged(final @Nullable ApplicationDetailsEntity productEntity) {
 				model.setProduct(productEntity);
 				if (productEntity != null) {
 					toolbar.setTitle(productEntity.getName());
 					toolbar.setSubtitle(productEntity.getId());
 					toolbar.setNavigationIcon(productEntity.getIcon36dp());
 					mAppInfoAdapter.setData(productEntity);
+					shareMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem menuItem) {
+							try {
+								File srcFile = new File(productEntity.apkFile);
+								Intent share = new Intent();
+								share.setAction(Intent.ACTION_SEND);
+								share.setType("application/vnd.android.package-archive");
+								share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(srcFile));
+								startActivity(Intent.createChooser(share, getResources().getString(R.string.app_details_share)));
+							} catch (Exception e) {
+								Crashlytics.logException(e);
+							}
+							return false;
+						}
+					});
+					shareMenuItem.setVisible(true);
+
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.app_details_toast_load_info, Toast.LENGTH_LONG).show();
 					finish();

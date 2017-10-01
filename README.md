@@ -1,22 +1,25 @@
 # Apk Info
 Show information's about installed APKs
 
-## Features TODO
+## Features
 - load list of installed apps
 - extract APK file (SD Card, Share file)
-- show info from manifest
-	- namespace (application id)
-	- permissions
-	- uses-feature
-	- list of activity
-	- list of services
-	- list of receivers
-	- list of providers
-	- show intent filters
-	- application meta-data
-	- version names and int
+- show info from manifest:
+    - namespace (application id)
+    - permissions
+    - list of activity
+    - list of services
+    - list of receivers
+    - list of providers
+    - application meta-data
+    - version names and int
+
+## Features TODO
+- show info from manifest:
+    - uses-feature
+    - show intent filters
 - run selected activities/services
-- try broadcast inf to receivers
+- try broadcast info to receivers
 
 # Icon
 ![Icon](https://raw.githubusercontent.com/kenumir/ApkInfo/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
