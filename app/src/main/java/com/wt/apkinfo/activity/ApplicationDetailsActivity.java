@@ -197,7 +197,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 				data.add(new ComponentInfo(res.getString(R.string.app_details_signature), entity.signatures[0]));
 			}
 
-			if (entity.permissions != null) {
+			if (entity.metadata != null) {
 				data.add(new ItemHeader(res.getString(R.string.app_details_meta, entity.metadata.length), entity.metadata));
 			}
 			if (entity.permissions != null) {
