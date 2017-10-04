@@ -4,12 +4,15 @@ package com.wt.apkinfo.fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -142,10 +145,16 @@ public class ApplicationsFragment extends Fragment {
 		if (adapter == null) {
 			adapter = new ApplicationsListAdapter(new OnItemClick() {
 				@Override
-				public void onItemClick(View v, ApplicationEntity item) {
+				public void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder) {
 					Intent it = new Intent(getActivity(), ApplicationDetailsActivity.class);
 					it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, item.getId());
-					startActivity(it);
+					if (Build.VERSION.SDK_INT >= 21) {
+						ActivityOptionsCompat options = ActivityOptionsCompat.
+								makeSceneTransitionAnimation(getActivity(), holder.icon1, "transition_" + item.id);
+						startActivity(it, options.toBundle());
+					} else {
+						startActivity(it);
+					}
 				}
 			});
 		}
@@ -168,7 +177,7 @@ public class ApplicationsFragment extends Fragment {
 	}
 
 	private interface OnItemClick {
-		void onItemClick(View v, ApplicationEntity item);
+		void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder);
 	}
 
 	private static class ApplicationsListAdapter extends RecyclerView.Adapter<ApplicationsItemHolder> {
@@ -191,7 +200,7 @@ public class ApplicationsFragment extends Fragment {
 		}
 
 		@Override
-		public void onBindViewHolder(ApplicationsItemHolder holder, int position) {
+		public void onBindViewHolder(final ApplicationsItemHolder holder, int position) {
 			final ApplicationEntity entry = mData.get(position);
 			holder.text1.setText(entry.getName());
 			holder.text2.setText(entry.getId());
@@ -200,10 +209,11 @@ public class ApplicationsFragment extends Fragment {
 				@Override
 				public void onClick(View view) {
 					if (mOnItemClick != null) {
-						mOnItemClick.onItemClick(view, entry);
+						mOnItemClick.onItemClick(view, entry, holder);
 					}
 				}
 			});
+			holder.update(entry);
 		}
 
 		@Override
@@ -221,6 +231,11 @@ public class ApplicationsFragment extends Fragment {
 		public ApplicationsItemHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
+		}
+
+		public void update(ApplicationEntity entry) {
+			ViewCompat.setTransitionName(icon1, "transition_" + entry.id);
+			//icon1.setTransitionName("transition_" + entry.id);
 		}
 	}
 }

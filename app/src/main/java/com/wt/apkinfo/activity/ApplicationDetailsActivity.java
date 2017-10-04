@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.wt.apkinfo.dialog.InfoListDialog;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
 import com.wt.apkinfo.entity.ComponentInfo;
 import com.wt.apkinfo.util.DateTime;
+import com.wt.apkinfo.util.ViewUtil;
 import com.wt.apkinfo.viewmodel.ApplicationDetailsViewModel;
 
 import java.io.File;
@@ -108,12 +110,20 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 				}
 			}
 		});
+		toolbar.setNavigationIcon(R.drawable.theme_round_icon);
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				finish();
 			}
 		});
+		toolbar.setNavigationContentDescription(appId);
+		if (Build.VERSION.SDK_INT >= 21) {
+			View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
+			if (navIcon != null) {
+				navIcon.setTransitionName("transition_" + appId);
+			}
+		}
 
 		mAppInfoAdapter = new AppInfoAdapter(getResources(), new OnHeaderClick() {
 			@Override
