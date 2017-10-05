@@ -17,6 +17,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +88,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 					toolbar.setSubtitle(productEntity.getId());
 					toolbar.setNavigationIcon(productEntity.getIcon36dp());
 					mAppInfoAdapter.setData(productEntity);
+					supportStartPostponedEnterTransition();
 					shareMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 						@Override
 						public boolean onMenuItemClick(MenuItem menuItem) {
@@ -114,15 +117,21 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				finish();
+				supportFinishAfterTransition();
 			}
 		});
 		toolbar.setNavigationContentDescription(appId);
 		if (Build.VERSION.SDK_INT >= 21) {
+			supportPostponeEnterTransition();
 			View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
 			if (navIcon != null) {
 				navIcon.setTransitionName("transition_" + appId);
 			}
+			Transition fade = new Fade();
+			fade.excludeTarget(android.R.id.statusBarBackground, true);
+			fade.excludeTarget(android.R.id.navigationBarBackground, true);
+			getWindow().setExitTransition(fade);
+			getWindow().setEnterTransition(fade);
 		}
 
 		mAppInfoAdapter = new AppInfoAdapter(getResources(), new OnHeaderClick() {
