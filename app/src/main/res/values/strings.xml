@@ -5,6 +5,7 @@
 
     <!-- main activity -->
     <string name="main_menu_about">About</string>
+    <string name="main_menu_search">Search</string>
 
 
     <!-- about -->

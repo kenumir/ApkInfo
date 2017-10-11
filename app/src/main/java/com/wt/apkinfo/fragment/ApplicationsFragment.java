@@ -16,16 +16,14 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,11 +51,11 @@ import butterknife.ButterKnife;
 public class ApplicationsFragment extends Fragment {
 
 	@BindView(R2.id.recycler) RecyclerView recycler;
-	@BindView(R2.id.searchEdit) EditText searchEdit;
 	@BindView(R2.id.overlayFrame) FrameLayout overlayFrame;
 	@BindView(R2.id.toolbar) Toolbar toolbar;
 
 	private ApplicationsListAdapter adapter;
+	private String searchText = null;
 
 	public ApplicationsFragment() {
 		// Required empty public constructor
@@ -67,13 +65,22 @@ public class ApplicationsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View res = inflater.inflate(R.layout.fragment_applications, container, false);
 		ButterKnife.bind(this, res);
-		searchEdit.setText(
-			ViewModelProviders.of(getActivity())
-				.get(ApplicationListViewModel.class)
-				.getFilter()
-		);
-		searchEdit.addTextChangedListener(new TextWatcher() {
-			private String searchText = null;
+
+		if (savedInstanceState != null) {
+			searchText = savedInstanceState.getString("searchText");
+		} else {
+			ApplicationListViewModel model = ViewModelProviders.of(getActivity()).get(ApplicationListViewModel.class);
+			String filter = model.getFilter();
+			if (filter != null) {
+				model.search(null);
+			}
+		}
+
+		Menu menu = toolbar.getMenu();
+
+		SearchView search = new SearchView(toolbar.getContext());
+		search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			private Handler handler = new Handler(Looper.getMainLooper());
 			private Runnable delay = new Runnable() {
 				@Override
 				public void run() {
@@ -87,36 +94,33 @@ public class ApplicationsFragment extends Fragment {
 					}
 				}
 			};
-			private Handler h = new Handler(Looper.getMainLooper());
 			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			public boolean onQueryTextSubmit(String query) {
+				searchText = query;
+				handler.removeCallbacks(delay);
+				handler.postDelayed(delay, 300);
+				return false;
 			}
+
 			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			}
-			@Override
-			public void afterTextChanged(Editable editable) {
-				if (BuildConfig.DEBUG) {
-					Console.logd("Text changed: " + editable);
-				}
-				searchText = editable.toString();
-				h.removeCallbacks(delay);
-				h.postDelayed(delay, 300);
+			public boolean onQueryTextChange(String newText) {
+				searchText = newText;
+				handler.removeCallbacks(delay);
+				handler.postDelayed(delay, 300);
+				return false;
 			}
 		});
-		Menu menu = toolbar.getMenu();
-		/*
-		menu
-			.add("Search")
+
+		MenuItem searchMenuItem = menu.add(R.string.main_menu_search)
 			.setIcon(R.drawable.ic_search_white_24dp)
-			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-				@Override
-				public boolean onMenuItemClick(MenuItem menuItem) {
-					return false;
-				}
-			})
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			*/
+			.setActionView(search);
+		searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
+		if (searchText != null) {
+			search.setQuery(searchText, false);
+			searchMenuItem.expandActionView();
+		}
+
 		menu
 			.add(R.string.main_menu_about)
 			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -188,6 +192,12 @@ public class ApplicationsFragment extends Fragment {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putString("searchText", searchText);
+		super.onSaveInstanceState(outState);
 	}
 
 	private interface OnItemClick {

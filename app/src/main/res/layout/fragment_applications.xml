@@ -16,15 +16,6 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/app_name"/>
 
-    <EditText
-        android:id="@+id/searchEdit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:padding="8dp"
-        android:inputType="text"
-        android:visibility="gone"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_below="@+id/toolbar"
