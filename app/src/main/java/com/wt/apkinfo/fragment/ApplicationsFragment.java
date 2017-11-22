@@ -1,8 +1,11 @@
 package com.wt.apkinfo.fragment;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +38,8 @@ import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
+import com.wt.apkinfo.activity.MainActivity;
+import com.wt.apkinfo.activity.StartAlarmReceiver;
 import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.util.IntentHelper;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
@@ -143,6 +148,39 @@ public class ApplicationsFragment extends Fragment {
 				}
 			})
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+		menu.add("Test Alarm").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				new MaterialDialog.Builder(getActivity())
+						.title("Select alarm time")
+						.items("1 min", "2 min", "3 min", "5 min", "10 min")
+						.itemsCallback(new MaterialDialog.ListCallback() {
+							@Override
+							public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+								String s = text.subSequence(0, text.toString().indexOf(" ")).toString().trim();
+								long time = (60_000 * Integer.valueOf(s)) + System.currentTimeMillis();
+								Console.logi("TIME: " + time);
+
+
+								Context ctx = getActivity().getApplicationContext();
+
+								Intent it = new Intent(ctx, MainActivity.class);
+								Intent mIntent = new Intent(ctx, StartAlarmReceiver.class);
+								PendingIntent pi = PendingIntent.getBroadcast(ctx, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+								AlarmManager mAlarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+
+								PendingIntent alarmEditInfo = PendingIntent.getActivity(ctx, 2, it, PendingIntent.FLAG_UPDATE_CURRENT);
+								mAlarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(System.currentTimeMillis() + (60_000 * time), alarmEditInfo), pi);
+
+								dialog.dismiss();
+							}
+						})
+						.build()
+						.show();
+				return false;
+			}
+		});
 		return res;
 	}
 

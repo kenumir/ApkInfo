@@ -1,6 +1,7 @@
 package com.wt.apkinfo;
 
 import android.app.Application;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 
 import com.crashlytics.android.Crashlytics;
@@ -44,7 +45,25 @@ public class App extends Application {
 				}
 			}).start();
 		}
-		Fabric.with(this, new Crashlytics());
-		Fabric.with(this, new Answers());
+		new AsyncTask<Void, Void, Void>(){
+			@Override
+			protected Void doInBackground(Void... params) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Fabric.with(App.this, new Crashlytics());
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Fabric.with(App.this, new Answers());
+
+				return null;
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 	}
 }
