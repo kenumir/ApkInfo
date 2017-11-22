@@ -125,6 +125,8 @@ public class DatabaseCreator {
 					result.lastUpdateTime = pi.lastUpdateTime;
 					result.apkFile = pi.applicationInfo.publicSourceDir;
 
+
+
 					if (pi.signatures != null) {
 						counter = 0;
 						MessageDigest md = MessageDigest.getInstance("SHA");

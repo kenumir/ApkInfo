@@ -62,14 +62,14 @@ public class ApplicationsFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View res = inflater.inflate(R.layout.fragment_applications, container, false);
 		ButterKnife.bind(this, res);
 
 		if (savedInstanceState != null) {
 			searchText = savedInstanceState.getString("searchText");
 		} else {
-			ApplicationListViewModel model = ViewModelProviders.of(getActivity()).get(ApplicationListViewModel.class);
+			ApplicationListViewModel model = ViewModelProviders.of(this).get(ApplicationListViewModel.class);
 			String filter = model.getFilter();
 			if (filter != null) {
 				model.search(null);
@@ -88,7 +88,7 @@ public class ApplicationsFragment extends Fragment {
 						if (BuildConfig.DEBUG) {
 							Console.logd("search: " + searchText);
 						}
-						ViewModelProviders.of(getActivity())
+						ViewModelProviders.of(ApplicationsFragment.this)
 								.get(ApplicationListViewModel.class)
 								.search(searchText);
 					}
@@ -121,24 +121,25 @@ public class ApplicationsFragment extends Fragment {
 			searchMenuItem.expandActionView();
 		}
 
-		menu
-			.add(R.string.main_menu_about)
+		menu.add(R.string.main_menu_about)
 			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 				@Override
 				public boolean onMenuItemClick(MenuItem menuItem) {
-					new MaterialDialog.Builder(getActivity())
-							.title(R.string.about_title)
-							.content(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
-							.positiveText(R.string.label_close)
-							.neutralText(R.string.about_open)
-							.onNeutral(new MaterialDialog.SingleButtonCallback() {
-								@Override
-								public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-									IntentHelper.openInBrowser(getActivity(), "https://plus.google.com/u/0/+Micha%C5%82Szwarc");
-								}
-							})
-							.build()
-							.show();
+					if (getActivity() != null) {
+						new MaterialDialog.Builder(getActivity())
+								.title(R.string.about_title)
+								.content(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
+								.positiveText(R.string.label_close)
+								.neutralText(R.string.about_open)
+								.onNeutral(new MaterialDialog.SingleButtonCallback() {
+									@Override
+									public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+										IntentHelper.openInBrowser(getActivity(), "https://plus.google.com/u/0/+Micha%C5%82Szwarc");
+									}
+								})
+								.build()
+								.show();
+					}
 					return false;
 				}
 			})
@@ -155,7 +156,7 @@ public class ApplicationsFragment extends Fragment {
 				public void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder) {
 					Intent it = new Intent(getActivity(), ApplicationDetailsActivity.class);
 					it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, item.getId());
-					if (Build.VERSION.SDK_INT >= 21) {
+					if (Build.VERSION.SDK_INT >= 21 && getActivity() != null) {
 						View decorView = getActivity().getWindow().getDecorView();
 						View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
 						View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
@@ -178,7 +179,7 @@ public class ApplicationsFragment extends Fragment {
 		}
 		recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		recycler.setAdapter(adapter);
-		ApplicationListViewModel viewModel = ViewModelProviders.of(getActivity()).get(ApplicationListViewModel.class);
+		ApplicationListViewModel viewModel = ViewModelProviders.of(this).get(ApplicationListViewModel.class);
 		viewModel.setup(null);
 		viewModel.getApplications().observe(this, new Observer<List<ApplicationEntity>>() {
 			@Override
@@ -195,7 +196,7 @@ public class ApplicationsFragment extends Fragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("searchText", searchText);
 		super.onSaveInstanceState(outState);
 	}

@@ -145,9 +145,11 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			@Override
 			public void onComponentLongClick(ComponentInfo item) {
 				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-				ClipData clip = ClipData.newPlainText("ApkInfo", item.className);
-				clipboard.setPrimaryClip(clip);
-				Toast.makeText(getApplicationContext(), R.string.app_details_toast_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+				if (clipboard != null) {
+					ClipData clip = ClipData.newPlainText("ApkInfo", item.className);
+					clipboard.setPrimaryClip(clip);
+					Toast.makeText(getApplicationContext(), R.string.app_details_toast_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		recycler.setLayoutManager(new LinearLayoutManager(this));

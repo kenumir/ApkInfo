@@ -44,7 +44,11 @@ public class App extends Application {
 				}
 			}).start();
 		}
-		Fabric.with(this, new Crashlytics());
-		Fabric.with(this, new Answers());
+
+		final Fabric fabric = new Fabric.Builder(this)
+				.kits(new Crashlytics(), new Answers())
+				.debuggable(true)
+				.build();
+		Fabric.with(fabric);
 	}
 }
