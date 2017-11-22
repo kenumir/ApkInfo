@@ -10,6 +10,8 @@ import com.github.anrwatchdog.ANRError;
 import com.github.anrwatchdog.ANRWatchDog;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.console.Console;
+import com.hivedi.era.ERA;
+import com.hivedi.era.ReportInterface;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -40,7 +42,7 @@ public class App extends Application {
 				@Override
 				public void onAppNotResponding(ANRError error) {
 					Answers.getInstance().logCustom(new CustomEvent("ANR Error Detected"));
-					Crashlytics.logException(error);
+					ERA.logException(error);
 				}
 			}).start();
 		}
@@ -50,5 +52,19 @@ public class App extends Application {
 				.debuggable(true)
 				.build();
 		Fabric.with(fabric);
+
+		ERA.registerAdapter(new ReportInterface() {
+			@Override
+			public void logException(Throwable throwable, Object... objects) {
+				Crashlytics.logException(throwable);
+			}
+			@Override
+			public void log(String s, Object... objects) {
+				Crashlytics.log(s);
+			}
+			@Override
+			public void breadcrumb(String s, Object... objects) {
+			}
+		});
 	}
 }
