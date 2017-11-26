@@ -27,7 +27,8 @@
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true">
+        android:clickable="true"
+        android:focusable="true">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -37,5 +38,32 @@
             android:layout_gravity="center"/>
 
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/overlayNoApps"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_apps_gray_48dp"
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_no_apps_found"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

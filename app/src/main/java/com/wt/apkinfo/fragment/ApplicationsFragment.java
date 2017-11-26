@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -52,6 +53,7 @@ public class ApplicationsFragment extends Fragment {
 
 	@BindView(R2.id.recycler) RecyclerView recycler;
 	@BindView(R2.id.overlayFrame) FrameLayout overlayFrame;
+	@BindView(R2.id.overlayNoApps) LinearLayout overlayNoApps;
 	@BindView(R2.id.toolbar) Toolbar toolbar;
 
 	private ApplicationsListAdapter adapter;
@@ -88,6 +90,7 @@ public class ApplicationsFragment extends Fragment {
 						if (BuildConfig.DEBUG) {
 							Console.logd("search: " + searchText);
 						}
+						//overlayFrame.setVisibility(View.VISIBLE);
 						ViewModelProviders.of(ApplicationsFragment.this)
 								.get(ApplicationListViewModel.class)
 								.search(searchText);
@@ -154,25 +157,31 @@ public class ApplicationsFragment extends Fragment {
 			adapter = new ApplicationsListAdapter(new OnItemClick() {
 				@Override
 				public void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder) {
-					Intent it = new Intent(getActivity(), ApplicationDetailsActivity.class);
-					it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, item.getId());
-					if (Build.VERSION.SDK_INT >= 21 && getActivity() != null) {
-						View decorView = getActivity().getWindow().getDecorView();
-						View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
-						View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
+					if (isAdded()) {
+						Intent it = new Intent(getActivity(), ApplicationDetailsActivity.class);
+						it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, item.getId());
 
-						List<Pair<View, String>> el = new ArrayList<>();
-						el.add(Pair.create((View) holder.icon1, "transition_" + item.id));
-						if (statusBar != null) {
-							el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+						// Bug in activity transitions, fixed in android 6.x
+						// https://issuetracker.google.com/issues/37121916
+						if (Build.VERSION.SDK_INT >= 23 && getActivity() != null) {
+							View decorView = getActivity().getWindow().getDecorView();
+							View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
+							View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
+
+							List<Pair<View, String>> el = new ArrayList<>();
+							el.add(Pair.create((View) holder.icon1, "transition_" + item.id));
+							if (statusBar != null) {
+								el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+							}
+							if (navigationBar != null) {
+								el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+							}
+							//noinspection unchecked
+							ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), el.toArray(new Pair[el.size()]));
+							startActivity(it, options.toBundle());
+						} else {
+							startActivity(it);
 						}
-						if (navigationBar != null) {
-							el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-						}
-						ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), el.toArray(new Pair[el.size()]));
-						startActivity(it, options.toBundle());
-					} else {
-						startActivity(it);
 					}
 				}
 			});
@@ -187,9 +196,11 @@ public class ApplicationsFragment extends Fragment {
 				if (apps != null) {
 					adapter.setData(apps);
 					overlayFrame.setVisibility(View.GONE);
+					overlayNoApps.setVisibility(apps.size() > 0 ? View.GONE : View.VISIBLE);
 				} else {
 					adapter.setData(null);
-					overlayFrame.setVisibility(View.VISIBLE);
+					overlayFrame.setVisibility(View.GONE);
+					overlayNoApps.setVisibility(View.VISIBLE);
 				}
 			}
 		});
@@ -247,6 +258,7 @@ public class ApplicationsFragment extends Fragment {
 		}
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public static class ApplicationsItemHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R2.id.text1) TextView text1;
