@@ -6,6 +6,8 @@ buildscript {
     apply from: './dependencies.gradle'
 
     repositories {
+        mavenLocal()
+        google()
         jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url 'https://maven.fabric.io/public' }
@@ -24,6 +26,7 @@ allprojects {
         jcenter()
         maven { url "https://maven.google.com" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url 'https://maven.fabric.io/public' }
     }
 }
 
