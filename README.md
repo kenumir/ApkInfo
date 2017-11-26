@@ -1,6 +1,11 @@
 # Apk Info
 Show information's about installed APKs
 
+<a href="https://play.google.com/store/apps/details?id=com.wt.apkinfo" target="_blank">
+  <img alt="Get it on Google Play"
+       src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="60"/>
+</a>
+
 ## Features
 - load list of installed apps
 - extract APK file (SD Card, Share file)
