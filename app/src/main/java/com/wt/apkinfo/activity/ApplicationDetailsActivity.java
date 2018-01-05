@@ -3,6 +3,7 @@ package com.wt.apkinfo.activity;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.hivedi.era.ERA;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.dialog.InfoListDialog;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
@@ -92,7 +95,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 	private AppInfoAdapter mAppInfoAdapter;
 	private ComponentInfo[] selectedData;
-	private MenuItem shareMenuItem;
+	private MenuItem shareMenuItem, appInfoMenu;
 
 	@Override
 	@AddTrace(name = "ApplicationDetailsActivity_onCreate")
@@ -109,6 +112,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 		final String appName = getIntent().getStringExtra(KEY_APP_NAME);
 
 		shareMenuItem = toolbar.getMenu().add(R.string.app_details_share).setVisible(false);
+        appInfoMenu = toolbar.getMenu().add(R.string.app_details_info).setVisible(false);
 
 		ApplicationDetailsViewModel.Factory factory = new ApplicationDetailsViewModel.Factory(getApplication(), appId);
 		final ApplicationDetailsViewModel model = ViewModelProviders.of(this, factory).get(ApplicationDetailsViewModel.class);
@@ -137,8 +141,21 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 							}
 							return false;
 						}
-					});
-					shareMenuItem.setVisible(true);
+					}).setVisible(true);
+                    appInfoMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            ERA.log("Open app info: " + appId);
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.setData(Uri.parse("package:" + appId));
+                                startActivity(intent);
+                            } catch (ActivityNotFoundException e) {
+								ERA.logException(e);
+							}
+                            return false;
+                        }
+                    }).setVisible(true);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.app_details_toast_load_info, Toast.LENGTH_LONG).show();
 					finish();
