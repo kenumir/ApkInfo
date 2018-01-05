@@ -1,5 +1,6 @@
 package com.wt.apkinfo.activity;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
@@ -10,8 +11,11 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,13 +27,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.wt.apkinfo.R;
-import com.wt.apkinfo.R2;
 import com.wt.apkinfo.dialog.InfoListDialog;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
 import com.wt.apkinfo.entity.ComponentInfo;
@@ -53,13 +57,41 @@ import butterknife.ButterKnife;
 public class ApplicationDetailsActivity extends AppCompatActivity implements InfoListDialog.OnGetData {
 
 	public static final String KEY_APP_ID = "application_id";
+	public static final String KEY_APP_NAME = "application_name";
 
-	@BindView(R2.id.toolbar) Toolbar toolbar;
-	@BindView(R2.id.recycler) RecyclerView recycler;
+	public static void start(@NonNull Activity ctx, @NonNull String appId, @NonNull String appName, @NonNull View holderImage) {
+		Intent it = new Intent(ctx, ApplicationDetailsActivity.class);
+		it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, appId);
+		it.putExtra(ApplicationDetailsActivity.KEY_APP_NAME, appName);
+
+		// Bug in activity transitions, fixed in android 6.x
+		// https://issuetracker.google.com/issues/37121916
+		if (Build.VERSION.SDK_INT >= 23) {
+			View decorView = ctx.getWindow().getDecorView();
+			View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
+			View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
+
+			List<Pair<View, String>> el = new ArrayList<>();
+			el.add(Pair.create(holderImage, "transition_" + appId));
+			if (statusBar != null) {
+				el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+			}
+			if (navigationBar != null) {
+				el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+			}
+			//noinspection unchecked
+			ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ctx, el.toArray(new Pair[el.size()]));
+			ctx.startActivity(it, options.toBundle());
+		} else {
+			ctx.startActivity(it);
+		}
+	}
+
+	@BindView(R.id.toolbar) Toolbar toolbar;
+	@BindView(R.id.recycler) RecyclerView recycler;
 
 	private AppInfoAdapter mAppInfoAdapter;
 	private ComponentInfo[] selectedData;
-	private String appId;
 	private MenuItem shareMenuItem;
 
 	@Override
@@ -73,7 +105,8 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 		setContentView(R.layout.activity_application_details);
 		ButterKnife.bind(this);
 
-		appId = getIntent().getStringExtra(KEY_APP_ID);
+		final String appId = getIntent().getStringExtra(KEY_APP_ID);
+		final String appName = getIntent().getStringExtra(KEY_APP_NAME);
 
 		shareMenuItem = toolbar.getMenu().add(R.string.app_details_share).setVisible(false);
 
@@ -106,13 +139,14 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 						}
 					});
 					shareMenuItem.setVisible(true);
-
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.app_details_toast_load_info, Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}
 		});
+		toolbar.setTitle(appName);
+		toolbar.setSubtitle(appId);
 		toolbar.setNavigationIcon(R.drawable.theme_round_icon);
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 			@Override
@@ -121,7 +155,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			}
 		});
 		toolbar.setNavigationContentDescription(appId);
-		if (Build.VERSION.SDK_INT >= 21) {
+		if (Build.VERSION.SDK_INT >= 23) {
 			supportPostponeEnterTransition();
 			View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
 			if (navIcon != null) {
@@ -237,8 +271,14 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 			data.add(new ComponentInfo(res.getString(R.string.app_details_version_name), entity.versionName));
 			data.add(new ComponentInfo(res.getString(R.string.app_details_version_code), Integer.toString(entity.versionCode)));
-			data.add(new ComponentInfo(res.getString(R.string.app_details_installation_time), DateTime.formatFull(entity.firstInstallTime)));
-			data.add(new ComponentInfo(res.getString(R.string.app_details_update_time), DateTime.formatFull(entity.lastUpdateTime)));
+			data.add(new ComponentInfo(res.getString(R.string.app_details_target_sdk), Integer.toString(entity.targetSdkVersion)));
+			if (entity.minSdkVersion > 0) {
+				data.add(new ComponentInfo(res.getString(R.string.app_details_min_sdk), Integer.toString(entity.minSdkVersion)));
+			}
+			data.add(new ComponentInfo(
+					res.getString(R.string.app_details_installation_update_time),
+					DateTime.formatFull(entity.firstInstallTime) + "/" + DateTime.formatFull(entity.lastUpdateTime)
+			));
 
 			if (entity.signatures != null) {
 				data.add(new ComponentInfo(res.getString(R.string.app_details_signature), entity.signatures[0]));

@@ -20,8 +20,9 @@
     <string name="app_details_title">Application Info</string>
     <string name="app_details_version_name">Version name</string>
     <string name="app_details_version_code">Version code</string>
-    <string name="app_details_installation_time">Installation time</string>
-    <string name="app_details_update_time">Update time</string>
+    <string name="app_details_target_sdk">Target SDK version</string>
+    <string name="app_details_min_sdk">Minimum SDK version</string>
+    <string name="app_details_installation_update_time">Installation/Update time</string>
     <string name="app_details_signature">Signature</string>
     <string name="app_details_meta">App Metadata (%d)</string>
     <string name="app_details_permissions">Permissions (%d)</string>

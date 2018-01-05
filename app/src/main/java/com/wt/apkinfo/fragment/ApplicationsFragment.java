@@ -3,16 +3,12 @@ package com.wt.apkinfo.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +26,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SearchEvent;
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
@@ -40,7 +37,6 @@ import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.util.IntentHelper;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -90,7 +86,7 @@ public class ApplicationsFragment extends Fragment {
 						if (BuildConfig.DEBUG) {
 							Console.logd("search: " + searchText);
 						}
-						//overlayFrame.setVisibility(View.VISIBLE);
+						Answers.getInstance().logSearch(new SearchEvent().putQuery(searchText));
 						ViewModelProviders.of(ApplicationsFragment.this)
 								.get(ApplicationListViewModel.class)
 								.search(searchText);
@@ -157,31 +153,8 @@ public class ApplicationsFragment extends Fragment {
 			adapter = new ApplicationsListAdapter(new OnItemClick() {
 				@Override
 				public void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder) {
-					if (isAdded()) {
-						Intent it = new Intent(getActivity(), ApplicationDetailsActivity.class);
-						it.putExtra(ApplicationDetailsActivity.KEY_APP_ID, item.getId());
-
-						// Bug in activity transitions, fixed in android 6.x
-						// https://issuetracker.google.com/issues/37121916
-						if (Build.VERSION.SDK_INT >= 23 && getActivity() != null) {
-							View decorView = getActivity().getWindow().getDecorView();
-							View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
-							View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
-
-							List<Pair<View, String>> el = new ArrayList<>();
-							el.add(Pair.create((View) holder.icon1, "transition_" + item.id));
-							if (statusBar != null) {
-								el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
-							}
-							if (navigationBar != null) {
-								el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-							}
-							//noinspection unchecked
-							ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), el.toArray(new Pair[el.size()]));
-							startActivity(it, options.toBundle());
-						} else {
-							startActivity(it);
-						}
+					if (getActivity() != null) {
+						ApplicationDetailsActivity.start(getActivity(), item.id, item.name, holder.icon1);
 					}
 				}
 			});

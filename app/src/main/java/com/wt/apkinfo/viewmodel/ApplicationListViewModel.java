@@ -5,9 +5,6 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.support.annotation.Nullable;
 
 import com.wt.apkinfo.db.DatabaseCreator;
 import com.wt.apkinfo.entity.ApplicationEntity;

@@ -1,12 +1,13 @@
 ext.versions = [
-        supportLib: '27.0.1',
-        firebase: '11.6.0',
+        supportLib: '27.0.2',
+        firebase: '11.8.0',
         butterknife: '9.0.0-SNAPSHOT',
-        lifecycle: '1.0.0-alpha9-1',
+        lifecycle: '1.0.0',
         materialDialogs: '0.9.6.0',
         console: '1.0.3',
         era: '2.1.1',
         anrwatchdog: '1.3.0',
         crashlytics: '2.7.1',
-        answers: '1.4.1'
+        answers: '1.4.1',
+        installreferrer: '1.0'
 ]

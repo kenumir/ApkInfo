@@ -1,10 +1,15 @@
 package com.wt.apkinfo.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
+import com.android.installreferrer.api.InstallReferrerClient;
+import com.android.installreferrer.api.InstallReferrerStateListener;
+import com.android.installreferrer.api.ReferrerDetails;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.hivedi.era.ERA;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
@@ -12,9 +17,11 @@ import com.wt.apkinfo.fragment.ApplicationsFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements InstallReferrerStateListener {
 
 	@BindView(R2.id.mainFrame) FrameLayout mainFrame;
+
+	private InstallReferrerClient mReferrerClient;
 
 	@Override
 	@AddTrace(name = "MainActivity_onCreate")
@@ -32,5 +39,28 @@ public class MainActivity extends AppCompatActivity {
 					.replace(R.id.mainFrame, mApplicationsFragment)
 					.commit();
 		}
+
+		mReferrerClient = InstallReferrerClient.newBuilder(this).build();
+		mReferrerClient.startConnection(this);
+	}
+
+	@Override
+	public void onInstallReferrerSetupFinished(int responseCode) {
+		ERA.log("onInstallReferrerSetupFinished: responseCode=" + responseCode);
+		if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
+			// TODO send info
+			try {
+				ReferrerDetails response = mReferrerClient.getInstallReferrer();
+				ERA.log("onInstallReferrerSetupFinished: InstallReferrer=" + response.getInstallReferrer());
+				mReferrerClient.endConnection();
+			} catch (RemoteException e) {
+				ERA.logException(e);
+			}
+		}
+	}
+
+	@Override
+	public void onInstallReferrerServiceDisconnected() {
+
 	}
 }

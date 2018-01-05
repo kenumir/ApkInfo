@@ -30,8 +30,8 @@ public class StartActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onPostResume() {
-		super.onPostResume();
+	protected void onResume() {
+		super.onResume();
 		new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 			@Override
 			public void run() {

@@ -11,9 +11,6 @@ import android.support.annotation.NonNull;
 
 import com.wt.apkinfo.db.DatabaseCreator;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
-import com.wt.apkinfo.entity.ApplicationEntity;
-
-import java.util.List;
 
 /**
  * Created by kenumir on 15.09.2017.

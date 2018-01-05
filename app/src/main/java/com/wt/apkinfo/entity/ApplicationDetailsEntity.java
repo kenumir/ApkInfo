@@ -27,6 +27,8 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	public long firstInstallTime;
 	public long lastUpdateTime;
 	public String apkFile;
+	public int targetSdkVersion;
+	public int minSdkVersion;
 
 	@Override
 	public String getId() {

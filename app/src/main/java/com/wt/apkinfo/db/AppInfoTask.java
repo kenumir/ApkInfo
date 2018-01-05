@@ -11,6 +11,7 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 
 import com.hivedi.console.Console;
@@ -84,6 +85,8 @@ public class AppInfoTask extends AsyncTask<Context, Void, ApplicationDetailsEnti
             result.firstInstallTime = pi.firstInstallTime;
             result.lastUpdateTime = pi.lastUpdateTime;
             result.apkFile = pi.applicationInfo.publicSourceDir;
+            result.targetSdkVersion = pi.applicationInfo.targetSdkVersion;
+            result.minSdkVersion = Build.VERSION.SDK_INT >= 24 ? pi.applicationInfo.minSdkVersion : 0;
 
             if (pi.activities != null) {
                 counter = 0;
