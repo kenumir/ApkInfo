@@ -95,7 +95,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 	private AppInfoAdapter mAppInfoAdapter;
 	private ComponentInfo[] selectedData;
-	private MenuItem shareMenuItem, appInfoMenu;
+	private MenuItem shareMenuItem, appInfoMenu, playStoreMenu;
 
 	@Override
 	@AddTrace(name = "ApplicationDetailsActivity_onCreate")
@@ -113,6 +113,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 		shareMenuItem = toolbar.getMenu().add(R.string.app_details_share).setVisible(false);
         appInfoMenu = toolbar.getMenu().add(R.string.app_details_info).setVisible(false);
+		playStoreMenu = toolbar.getMenu().add(R.string.app_details_play_store).setVisible(false);
 
 		ApplicationDetailsViewModel.Factory factory = new ApplicationDetailsViewModel.Factory(getApplication(), appId);
 		final ApplicationDetailsViewModel model = ViewModelProviders.of(this, factory).get(ApplicationDetailsViewModel.class);
@@ -156,6 +157,34 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
                             return false;
                         }
                     }).setVisible(true);
+					playStoreMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem menuItem) {
+							ERA.log("Open Play Store: " + appId);
+							try {
+								startActivity(
+										new Intent(
+												Intent.ACTION_VIEW,
+												Uri.parse("market://details?id=" + appId)
+										)
+								);
+								return true;
+							} catch (Exception e) {
+								try {
+									startActivity(
+											new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("https://play.google.com/store/apps/details?id=" + appId)
+											)
+									);
+									return true;
+								} catch (Exception e2) {
+									ERA.logException(e2);
+								}
+							}
+							return false;
+						}
+					}).setVisible(true);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.app_details_toast_load_info, Toast.LENGTH_LONG).show();
 					finish();
