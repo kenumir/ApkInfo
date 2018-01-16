@@ -30,10 +30,14 @@
     <string name="app_details_services">Services (%d)</string>
     <string name="app_details_receivers">Receivers (%d)</string>
     <string name="app_details_providers">Providers (%d)</string>
+    <string name="app_details_share">Share APK file</string>
+    <string name="app_details_info">System app info</string>
+    <string name="app_details_play_store">Search in Play Store</string>
+    <string name="app_details_run">Run</string>
+
+    <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">Error load application info</string>
     <string name="app_details_toast_copied_to_clipboard">Copied to clipboard</string>
-    <string name="app_details_share">Share APK file</string>
-    <string name="app_details_info">Application info</string>
-    <string name="app_details_play_store">Search in Play Store</string>
+    <string name="app_details_toast_no_launcher_activity">Activity to launch not found</string>
 
 </resources>

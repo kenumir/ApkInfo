@@ -95,7 +95,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 	private AppInfoAdapter mAppInfoAdapter;
 	private ComponentInfo[] selectedData;
-	private MenuItem shareMenuItem, appInfoMenu, playStoreMenu;
+	private MenuItem shareMenuItem, appInfoMenu, playStoreMenu, runMenu;
 
 	@Override
 	@AddTrace(name = "ApplicationDetailsActivity_onCreate")
@@ -114,6 +114,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 		shareMenuItem = toolbar.getMenu().add(R.string.app_details_share).setVisible(false);
         appInfoMenu = toolbar.getMenu().add(R.string.app_details_info).setVisible(false);
 		playStoreMenu = toolbar.getMenu().add(R.string.app_details_play_store).setVisible(false);
+		runMenu = toolbar.getMenu().add(R.string.app_details_run).setVisible(false);
 
 		ApplicationDetailsViewModel.Factory factory = new ApplicationDetailsViewModel.Factory(getApplication(), appId);
 		final ApplicationDetailsViewModel model = ViewModelProviders.of(this, factory).get(ApplicationDetailsViewModel.class);
@@ -185,6 +186,19 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 							return false;
 						}
 					}).setVisible(true);
+					runMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem menuItem) {
+							ERA.log("Run: " + appId);
+							Intent runIntent = getPackageManager().getLaunchIntentForPackage(appId);
+							if (runIntent != null) {
+								startActivity(runIntent);
+							} else {
+								Toast.makeText(getApplicationContext(), R.string.app_details_toast_no_launcher_activity, Toast.LENGTH_SHORT).show();
+							}
+							return false;
+						}
+					}).setVisible(true);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.app_details_toast_load_info, Toast.LENGTH_LONG).show();
 					finish();
@@ -218,8 +232,11 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			@Override
 			public void onHeaderClick(ItemHeader item) {
 				selectedData = item.data;
-				InfoListDialog d = InfoListDialog.newInstance(item.title);
-				d.show(getSupportFragmentManager(), "dialog_info");
+				// IllegalStateException:  Can not perform this action after onSaveInstanceState
+				ERA.log("isFinishing=" + isFinishing());
+				InfoListDialog
+						.newInstance(item.title)
+						.show(getSupportFragmentManager(), "dialog_info");
 			}
 		}, new OnComponentLongClick() {
 			@Override
