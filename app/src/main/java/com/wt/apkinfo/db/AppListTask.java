@@ -59,13 +59,19 @@ public class AppListTask extends AsyncTask<Context, Void, List<ApplicationEntity
                     continue;
                 }
 
+                e.iconUri = "app://" + ri.activityInfo.packageName;
                 //Console.logi("SRC=" + ri.activityInfo.applicationInfo.publicSourceDir);
+                //if (ri.activityInfo.icon == 0) {
+                //    e.iconUri = ri.activityInfo.packageName + "/" + ri.activityInfo.applicationInfo.;
+                //} else {
+                //    e.iconUri = ri.activityInfo.packageName + "/" + ri.activityInfo.targetActivity;
+                //}
 
-                if (ri.activityInfo.icon == 0) {
-                    e.icon = ri.activityInfo.applicationInfo.loadIcon(pm);
-                } else {
-                    e.icon = ri.activityInfo.loadIcon(pm);
-                }
+                //if (ri.activityInfo.icon == 0) {
+                    //e.icon = ri.activityInfo.applicationInfo.loadIcon(pm);
+                //} else {
+                //    e.icon = ri.activityInfo.loadIcon(pm);
+                //}
                 list.add(e);
             }
 

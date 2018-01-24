@@ -34,6 +34,7 @@ import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
 import com.wt.apkinfo.entity.ApplicationEntity;
+import com.wt.apkinfo.util.ImageLoader;
 import com.wt.apkinfo.util.IntentHelper;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
@@ -213,7 +214,7 @@ public class ApplicationsFragment extends Fragment {
 			final ApplicationEntity entry = mData.get(position);
 			holder.text1.setText(entry.getName());
 			holder.text2.setText(entry.getId());
-			holder.icon1.setImageDrawable(entry.getIcon());
+			//holder.icon1.setImageDrawable(entry.getIcon());
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -222,6 +223,9 @@ public class ApplicationsFragment extends Fragment {
 					}
 				}
 			});
+
+			ImageLoader.get().load(entry.getIconUri(), holder.icon1);
+
 			holder.update(entry);
 		}
 

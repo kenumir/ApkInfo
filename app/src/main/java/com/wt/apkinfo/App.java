@@ -12,6 +12,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.hivedi.era.ReportInterface;
+import com.wt.apkinfo.util.ImageLoader;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -66,5 +67,7 @@ public class App extends Application {
 			public void breadcrumb(String s, Object... objects) {
 			}
 		});
+
+		ImageLoader.init(getApplicationContext());
 	}
 }

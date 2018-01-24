@@ -85,6 +85,7 @@ dependencies {
     implementation "com.android.support:design:" + versions.supportLib
 
     implementation 'com.android.installreferrer:installreferrer:' + versions.installreferrer
+    implementation 'com.squareup.picasso:picasso:' + versions.picasso
 
     implementation 'android.arch.lifecycle:runtime:' + versions.lifecycle
     implementation 'android.arch.lifecycle:extensions:' + versions.lifecycle
