@@ -55,6 +55,23 @@ public class ApplicationsFragment extends Fragment {
 
 	private ApplicationsListAdapter adapter;
 	private String searchText = null;
+	private Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchAction = new Runnable() {
+        @Override
+        public void run() {
+            if (isAdded()) {
+                if (BuildConfig.DEBUG) {
+                    Console.logd("search: " + searchText);
+                }
+                Answers.getInstance().logSearch(new SearchEvent().putQuery(searchText));
+                ViewModelProviders.of(ApplicationsFragment.this)
+                        .get(ApplicationListViewModel.class)
+                        .search(searchText);
+            }
+        }
+    };
+    private SearchView search;
+    private MenuItem searchMenuItem;
 
 	public ApplicationsFragment() {
 		// Required empty public constructor
@@ -77,41 +94,26 @@ public class ApplicationsFragment extends Fragment {
 
 		Menu menu = toolbar.getMenu();
 
-		SearchView search = new SearchView(toolbar.getContext());
+		search = new SearchView(toolbar.getContext());
 		search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-			private Handler handler = new Handler(Looper.getMainLooper());
-			private Runnable delay = new Runnable() {
-				@Override
-				public void run() {
-					if (isAdded()) {
-						if (BuildConfig.DEBUG) {
-							Console.logd("search: " + searchText);
-						}
-						Answers.getInstance().logSearch(new SearchEvent().putQuery(searchText));
-						ViewModelProviders.of(ApplicationsFragment.this)
-								.get(ApplicationListViewModel.class)
-								.search(searchText);
-					}
-				}
-			};
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				searchText = query;
-				handler.removeCallbacks(delay);
-				handler.postDelayed(delay, 300);
+                searchHandler.removeCallbacks(searchAction);
+                searchHandler.postDelayed(searchAction, 300);
 				return false;
 			}
 
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				searchText = newText;
-				handler.removeCallbacks(delay);
-				handler.postDelayed(delay, 300);
+                searchHandler.removeCallbacks(searchAction);
+                searchHandler.postDelayed(searchAction, 300);
 				return false;
 			}
 		});
 
-		MenuItem searchMenuItem = menu.add(R.string.main_menu_search)
+		searchMenuItem = menu.add(R.string.main_menu_search)
 			.setIcon(R.drawable.ic_search_white_24dp)
 			.setActionView(search);
 		searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -184,6 +186,15 @@ public class ApplicationsFragment extends Fragment {
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("searchText", searchText);
 		super.onSaveInstanceState(outState);
+	}
+
+	public boolean onBackAction() {
+        if (searchText != null && searchText.length() > 0) {
+			search.setQuery(null, true);
+			searchMenuItem.collapseActionView();
+            return true;
+        }
+        return false;
 	}
 
 	private interface OnItemClick {

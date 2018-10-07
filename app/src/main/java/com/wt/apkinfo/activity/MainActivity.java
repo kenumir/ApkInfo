@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 	@BindView(R2.id.mainFrame) FrameLayout mainFrame;
 
 	private InstallReferrerClient mReferrerClient;
+	private ApplicationsFragment mApplicationsFragment;
 
 	@Override
 	@AddTrace(name = "MainActivity_onCreate")
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
 
-		ApplicationsFragment mApplicationsFragment = (ApplicationsFragment) getSupportFragmentManager()
+		mApplicationsFragment = (ApplicationsFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.mainFrame);
 		if (mApplicationsFragment == null) {
 			mApplicationsFragment = new ApplicationsFragment();
@@ -41,7 +42,11 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 		}
 
 		mReferrerClient = InstallReferrerClient.newBuilder(this).build();
-		mReferrerClient.startConnection(this);
+		try {
+			mReferrerClient.startConnection(this);
+		} catch (Exception e) {
+			ERA.logException(e);
+		}
 	}
 
 	@Override
@@ -62,5 +67,14 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 	@Override
 	public void onInstallReferrerServiceDisconnected() {
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mApplicationsFragment.onBackAction()) {
+			// skip back action - handle by fragment
+		} else {
+			super.onBackPressed();
+		}
 	}
 }
