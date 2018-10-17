@@ -215,13 +215,14 @@ public class ApplicationsFragment extends Fragment {
 			notifyDataSetChanged();
 		}
 
+		@NonNull
 		@Override
-		public ApplicationsItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		public ApplicationsItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 			return new ApplicationsItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_application, parent, false));
 		}
 
 		@Override
-		public void onBindViewHolder(final ApplicationsItemHolder holder, int position) {
+		public void onBindViewHolder(@NonNull final ApplicationsItemHolder holder, int position) {
 			final ApplicationEntity entry = mData.get(position);
 			holder.text1.setText(entry.getName());
 			holder.text2.setText(entry.getId());

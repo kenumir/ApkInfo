@@ -72,11 +72,12 @@ public class AppInfoTask extends AsyncTask<Context, Void, ApplicationDetailsEnti
 					 */
             result.id = appId;
             result.name = pi.applicationInfo.loadLabel(pm).toString();
-            result.icon = pi.applicationInfo.loadIcon(pm);
+            //result.icon = pi.applicationInfo.loadIcon(pm);
 
-            Bitmap src = BitmapUtil.drawableToBitmap(result.icon);
-            int dp36 = (int) (context.getResources().getDisplayMetrics().density * 36f);
-            result.icon36dp = BitmapUtil.bitmapToDrawable(context, Bitmap.createScaledBitmap(src, dp36, dp36, true));
+            //Bitmap src = BitmapUtil.drawableToBitmap(result.icon);
+            //int dp36 = (int) (context.getResources().getDisplayMetrics().density * 36f);
+            //result.icon36dp = result.icon;
+            //result.icon36dp = BitmapUtil.bitmapToDrawable(context, Bitmap.createScaledBitmap(src, dp36, dp36, true));
 
             int counter;
 

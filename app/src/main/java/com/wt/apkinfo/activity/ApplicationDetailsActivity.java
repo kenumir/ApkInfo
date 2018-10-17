@@ -9,6 +9,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.AdaptiveIconDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.dialog.InfoListDialog;
@@ -69,25 +71,24 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 		// Bug in activity transitions, fixed in android 6.x
 		// https://issuetracker.google.com/issues/37121916
-		if (Build.VERSION.SDK_INT >= 23) {
-			View decorView = ctx.getWindow().getDecorView();
-			View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
-			View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
-
-			List<Pair<View, String>> el = new ArrayList<>();
-			el.add(Pair.create(holderImage, "transition_" + appId));
-			if (statusBar != null) {
-				el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
-			}
-			if (navigationBar != null) {
-				el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-			}
-			//noinspection unchecked
-			ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ctx, el.toArray(new Pair[el.size()]));
-			ctx.startActivity(it, options.toBundle());
-		} else {
+		//if (Build.VERSION.SDK_INT >= 23 && Build.VERSION.SDK_INT < 27) {
+		//	View decorView = ctx.getWindow().getDecorView();
+		//	View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
+		//	View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
+		//	List<Pair<View, String>> el = new ArrayList<>();
+		//	el.add(Pair.create(holderImage, "transition_" + appId));
+		//	if (statusBar != null) {
+		//		el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+		//	}
+		//	if (navigationBar != null) {
+		//		el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+		//	}
+		//	//noinspection unchecked
+		//	ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ctx, el.toArray(new Pair[0]));
+		//	ctx.startActivity(it, options.toBundle());
+		//} else {
 			ctx.startActivity(it);
-		}
+		//}
 	}
 
 	@BindView(R.id.toolbar) Toolbar toolbar;
@@ -125,7 +126,11 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 				if (productEntity != null) {
 					toolbar.setTitle(productEntity.getName());
 					toolbar.setSubtitle(productEntity.getId());
-					toolbar.setNavigationIcon(productEntity.getIcon36dp());
+					//toolbar.setNavigationIcon(productEntity.getIcon36dp(ApplicationDetailsActivity.this));
+					toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+					//Console.loge("R=" + productEntity.icon.mutate());
+					//AdaptiveIconDrawable a;
+
 					mAppInfoAdapter.setData(productEntity);
 					supportStartPostponedEnterTransition();
 					shareMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -215,18 +220,18 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			}
 		});
 		toolbar.setNavigationContentDescription(appId);
-		if (Build.VERSION.SDK_INT >= 23) {
-			supportPostponeEnterTransition();
-			View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
-			if (navIcon != null) {
-				navIcon.setTransitionName("transition_" + appId);
-			}
-			Transition fade = new Fade();
-			fade.excludeTarget(android.R.id.statusBarBackground, true);
-			fade.excludeTarget(android.R.id.navigationBarBackground, true);
-			getWindow().setExitTransition(fade);
-			getWindow().setEnterTransition(fade);
-		}
+		//if (Build.VERSION.SDK_INT >= 23) {
+		//	supportPostponeEnterTransition();
+		//	View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
+		//	if (navIcon != null) {
+		//		navIcon.setTransitionName("transition_" + appId);
+		//	}
+		//	Transition fade = new Fade();
+		//	fade.excludeTarget(android.R.id.statusBarBackground, true);
+		//	fade.excludeTarget(android.R.id.navigationBarBackground, true);
+		//	getWindow().setExitTransition(fade);
+		//	getWindow().setEnterTransition(fade);
+		//}
 
 		mAppInfoAdapter = new AppInfoAdapter(getResources(), new OnHeaderClick() {
 			@Override
@@ -374,17 +379,19 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			return data.get(position) instanceof ItemHeader ? 1 : 2;
 		}
 
+		@NonNull
 		@Override
-		public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 			switch (viewType) {
 				case 1: return new HeaderHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false));
+				default:
 				case 2: return new ComponentInfoHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_component_info, parent, false));
 			}
-			return null;
+			//return null;
 		}
 
 		@Override
-		public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+		public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 			if (holder instanceof HeaderHolder) {
 				final ItemHeader d = (ItemHeader) data.get(position);
 				((HeaderHolder) holder).setTitle(d.title);
