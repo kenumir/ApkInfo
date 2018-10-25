@@ -38,4 +38,9 @@
     <string name="app_details_toast_copied_to_clipboard">क्लिपबोर्ड पर नकल</string>
     <string name="app_details_toast_no_launcher_activity">शुरू नहीं कर सकता</string>
 
+    <!-- rate -->
+    <string name="rate_title">एप्लिकेशन का मूल्यांकन करें</string>
+    <string name="rate_toast">आपकी दर के लिए धन्यवाद</string>
+    <string name="rate_toast_play_store">5 सितारे का चयन करें :-)</string>
+
 </resources>

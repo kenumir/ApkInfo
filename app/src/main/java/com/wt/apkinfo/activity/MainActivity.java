@@ -12,7 +12,9 @@ import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.era.ERA;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
+import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
+import com.wt.apkinfo.util.UserEngagement;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +48,18 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 			mReferrerClient.startConnection(this);
 		} catch (Exception e) {
 			ERA.logException(e);
+		}
+
+		if (savedInstanceState == null) {
+			UserEngagement.showRateDialog(this, new Runnable() {
+				@Override
+				public void run() {
+					if (!isFinishing()) {
+						new RateAppDialog().show(getSupportFragmentManager(), "rate_app");
+						UserEngagement.markRateDialogAsOpened(getApplicationContext());
+					}
+				}
+			});
 		}
 	}
 

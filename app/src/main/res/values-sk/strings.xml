@@ -38,4 +38,9 @@
     <string name="app_details_toast_copied_to_clipboard">Skopírovať do schránky</string>
     <string name="app_details_toast_no_launcher_activity">Nemožno spustiť</string>
 
+    <!-- rate -->
+    <string name="rate_title">Hodnotiť aplikáciu</string>
+    <string name="rate_toast">Ďakujeme za vašu sadzbu</string>
+    <string name="rate_toast_play_store">Vyberte 5 hviezdičiek :-)</string>
+
 </resources>

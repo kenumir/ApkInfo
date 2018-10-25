@@ -33,9 +33,11 @@ import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.R2;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
+import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.util.ImageLoader;
 import com.wt.apkinfo.util.IntentHelper;
+import com.wt.apkinfo.util.UserEngagement;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
 import java.util.List;
@@ -146,6 +148,19 @@ public class ApplicationsFragment extends Fragment {
 				}
 			})
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		menu.add(R.string.rate_title)
+                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (getFragmentManager() != null) {
+                            RateAppDialog d = new RateAppDialog();
+                            d.setTargetFragment(ApplicationsFragment.this, 1);
+                            d.show(getFragmentManager(), "rate");
+                        }
+                        return false;
+                    }
+                })
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		return res;
 	}
 
@@ -158,6 +173,7 @@ public class ApplicationsFragment extends Fragment {
 				public void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder) {
 					if (getActivity() != null) {
 						ApplicationDetailsActivity.start(getActivity(), item.id, item.name, holder.icon1);
+                        UserEngagement.incUserRateConditionValue(getActivity());
 					}
 				}
 			});

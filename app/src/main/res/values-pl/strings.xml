@@ -38,4 +38,9 @@
     <string name="app_details_toast_copied_to_clipboard">Skopiowano do schowka</string>
     <string name="app_details_toast_no_launcher_activity">Nie można uruchomić</string>
 
+    <!-- rate -->
+    <string name="rate_title">Oceń aplikację</string>
+    <string name="rate_toast">Dzieki za ocenę</string>
+    <string name="rate_toast_play_store">Zaznacz 5 gwiazdek :-)</string>
+
 </resources>

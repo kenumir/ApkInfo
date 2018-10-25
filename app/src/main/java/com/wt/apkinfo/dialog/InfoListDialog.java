@@ -44,6 +44,8 @@ public class InfoListDialog extends DialogFragment {
 		return d;
 	}
 
+	public InfoListDialog() {}
+
 	private OnGetData mOnGetData;
 
 	@Override

@@ -38,4 +38,9 @@
     <string name="app_details_toast_copied_to_clipboard">Copied to clipboard</string>
     <string name="app_details_toast_no_launcher_activity">Activity to launch not found</string>
 
+    <!-- rate -->
+    <string name="rate_title">Rate app</string>
+    <string name="rate_toast">Thanks for your rate</string>
+    <string name="rate_toast_play_store">Select 5 stars :-)</string>
+
 </resources>

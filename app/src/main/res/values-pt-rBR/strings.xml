@@ -38,4 +38,9 @@
     <string name="app_details_toast_copied_to_clipboard">Copiado para a área de transferência</string>
     <string name="app_details_toast_no_launcher_activity">Não pode começar</string>
 
+    <!-- rate -->
+    <string name="rate_title">Avaliar aplicativo</string>
+    <string name="rate_toast">Obrigado pela sua taxa</string>
+    <string name="rate_toast_play_store">Selecione 5 estrelas :-)</string>
+
 </resources>
