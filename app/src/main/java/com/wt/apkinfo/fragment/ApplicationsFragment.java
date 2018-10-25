@@ -205,9 +205,11 @@ public class ApplicationsFragment extends Fragment {
 
 		private List<ApplicationEntity> mData;
 		private OnItemClick mOnItemClick;
+		private ImageLoader mImageLoader;
 
 		ApplicationsListAdapter(OnItemClick click) {
 			mOnItemClick = click;
+            mImageLoader = ImageLoader.get();
 		}
 
 		public void setData(List<ApplicationEntity> d) {
@@ -226,7 +228,6 @@ public class ApplicationsFragment extends Fragment {
 			final ApplicationEntity entry = mData.get(position);
 			holder.text1.setText(entry.getName());
 			holder.text2.setText(entry.getId());
-			//holder.icon1.setImageDrawable(entry.getIcon());
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -236,7 +237,7 @@ public class ApplicationsFragment extends Fragment {
 				}
 			});
 
-			ImageLoader.get().load(entry.getIconUri(), holder.icon1);
+            mImageLoader.load(entry.getIconUri(), holder.icon1);
 
 			holder.update(entry);
 		}

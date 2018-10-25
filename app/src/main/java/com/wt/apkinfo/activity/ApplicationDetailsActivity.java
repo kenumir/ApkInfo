@@ -9,7 +9,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AdaptiveIconDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,11 +40,15 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.dialog.InfoListDialog;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
 import com.wt.apkinfo.entity.ComponentInfo;
+import com.wt.apkinfo.util.BitmapUtil;
 import com.wt.apkinfo.util.DateTime;
+import com.wt.apkinfo.util.ImageLoader;
 import com.wt.apkinfo.util.ViewUtil;
 import com.wt.apkinfo.viewmodel.ApplicationDetailsViewModel;
 
@@ -59,7 +65,7 @@ import butterknife.ButterKnife;
  *
  */
 
-public class ApplicationDetailsActivity extends AppCompatActivity implements InfoListDialog.OnGetData {
+public class ApplicationDetailsActivity extends AppCompatActivity implements InfoListDialog.OnGetData, Target {
 
 	public static final String KEY_APP_ID = "application_id";
 	public static final String KEY_APP_NAME = "application_name";
@@ -71,24 +77,24 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 		// Bug in activity transitions, fixed in android 6.x
 		// https://issuetracker.google.com/issues/37121916
-		//if (Build.VERSION.SDK_INT >= 23 && Build.VERSION.SDK_INT < 27) {
-		//	View decorView = ctx.getWindow().getDecorView();
-		//	View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
-		//	View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
-		//	List<Pair<View, String>> el = new ArrayList<>();
-		//	el.add(Pair.create(holderImage, "transition_" + appId));
-		//	if (statusBar != null) {
-		//		el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
-		//	}
-		//	if (navigationBar != null) {
-		//		el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-		//	}
-		//	//noinspection unchecked
-		//	ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ctx, el.toArray(new Pair[0]));
-		//	ctx.startActivity(it, options.toBundle());
-		//} else {
+		if (Build.VERSION.SDK_INT >= 23) {
+			View decorView = ctx.getWindow().getDecorView();
+			View statusBar = decorView.findViewById(android.R.id.statusBarBackground);
+			View navigationBar = decorView.findViewById(android.R.id.navigationBarBackground);
+			List<Pair<View, String>> el = new ArrayList<>();
+			el.add(Pair.create(holderImage, "transition_" + appId));
+			if (statusBar != null) {
+				el.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+			}
+			if (navigationBar != null) {
+				el.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+			}
+			//noinspection unchecked
+			ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ctx, el.toArray(new Pair[0]));
+			ctx.startActivity(it, options.toBundle());
+		} else {
 			ctx.startActivity(it);
-		//}
+		}
 	}
 
 	@BindView(R.id.toolbar) Toolbar toolbar;
@@ -126,10 +132,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 				if (productEntity != null) {
 					toolbar.setTitle(productEntity.getName());
 					toolbar.setSubtitle(productEntity.getId());
-					//toolbar.setNavigationIcon(productEntity.getIcon36dp(ApplicationDetailsActivity.this));
 					toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-					//Console.loge("R=" + productEntity.icon.mutate());
-					//AdaptiveIconDrawable a;
+
+					ImageLoader.get().load(productEntity.getIconUri(), ApplicationDetailsActivity.this);
 
 					mAppInfoAdapter.setData(productEntity);
 					supportStartPostponedEnterTransition();
@@ -220,18 +225,18 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			}
 		});
 		toolbar.setNavigationContentDescription(appId);
-		//if (Build.VERSION.SDK_INT >= 23) {
-		//	supportPostponeEnterTransition();
-		//	View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
-		//	if (navIcon != null) {
-		//		navIcon.setTransitionName("transition_" + appId);
-		//	}
-		//	Transition fade = new Fade();
-		//	fade.excludeTarget(android.R.id.statusBarBackground, true);
-		//	fade.excludeTarget(android.R.id.navigationBarBackground, true);
-		//	getWindow().setExitTransition(fade);
-		//	getWindow().setEnterTransition(fade);
-		//}
+		if (Build.VERSION.SDK_INT >= 23) {
+			supportPostponeEnterTransition();
+			View navIcon = ViewUtil.findViewWithContentDescription(toolbar, appId);
+			if (navIcon != null) {
+				navIcon.setTransitionName("transition_" + appId);
+			}
+			Transition fade = new Fade();
+			fade.excludeTarget(android.R.id.statusBarBackground, true);
+			fade.excludeTarget(android.R.id.navigationBarBackground, true);
+			getWindow().setExitTransition(fade);
+			getWindow().setEnterTransition(fade);
+		}
 
 		mAppInfoAdapter = new AppInfoAdapter(getResources(), new OnHeaderClick() {
 			@Override
@@ -278,6 +283,21 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			return new ArrayList<>(Arrays.asList(selectedData));
 		}
 		return null;
+	}
+
+	@Override
+	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+		toolbar.setNavigationIcon(BitmapUtil.bitmapToDrawable(this, bitmap));
+	}
+
+	@Override
+	public void onBitmapFailed(Drawable errorDrawable) {
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+	}
+
+	@Override
+	public void onPrepareLoad(Drawable placeHolderDrawable) {
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 	}
 
 	private static class ItemHeader {

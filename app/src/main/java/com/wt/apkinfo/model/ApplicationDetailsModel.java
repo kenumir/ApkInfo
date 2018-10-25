@@ -12,7 +12,6 @@ public interface ApplicationDetailsModel {
 
 	String getId();
 	String getName();
-	Drawable getIcon();
-	Drawable getIcon36dp(Context ctx);
+	String getIconUri();
 
 }

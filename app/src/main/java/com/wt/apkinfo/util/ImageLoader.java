@@ -13,7 +13,9 @@ import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Request;
 import com.squareup.picasso.RequestHandler;
+import com.squareup.picasso.Target;
 import com.wt.apkinfo.BuildConfig;
+import com.wt.apkinfo.R;
 
 import java.io.IOException;
 
@@ -49,18 +51,19 @@ public class ImageLoader {
                 .addRequestHandler(new RequestHandler() {
                     @Override
                     public boolean canHandleRequest(Request data) {
-                        return data.uri.getScheme().equals("app");
+                        String scheme = data.uri.getScheme();
+                        return "app".equals(scheme);
                     }
                     @Override
                     public Result load(Request request, int networkPolicy) throws IOException {
                         try {
                             return new Result(
-                                    drawableToBitmap(pm.getApplicationIcon(request.uri.getHost())),
+                                    BitmapUtil.drawableToBitmap(pm.getApplicationIcon(request.uri.getHost())),
                                     Picasso.LoadedFrom.DISK
                             );
                         } catch (Exception e) {
                             if (BuildConfig.DEBUG) {
-                                Console.loge("" + e, e);
+                                Console.loge("ImageLoader.load: " + e, e);
                             }
                         }
                         return null;
@@ -69,31 +72,18 @@ public class ImageLoader {
                 .build();
     }
 
-    private static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
     public void load(String url, ImageView img) {
+        mPicasso.cancelRequest(img);
         mPicasso.load(url)
                 .fit()
+                .centerInside()
+                .into(img);
+    }
+
+    public void load(String url, Target img) {
+        mPicasso.load(url)
+                //.fit()
+                .resizeDimen(R.dimen.app_icon_size, R.dimen.app_icon_size)
                 .centerInside()
                 .into(img);
     }

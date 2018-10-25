@@ -14,7 +14,6 @@ public class ApplicationEntity implements ApplicationModel, Comparable<Applicati
 
 	public String id;
 	public String name;
-	public Drawable icon;
 	public String iconUri;
 
 	@Override
@@ -25,11 +24,6 @@ public class ApplicationEntity implements ApplicationModel, Comparable<Applicati
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public Drawable getIcon() {
-		return icon;
 	}
 
 	@Override

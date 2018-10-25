@@ -18,8 +18,6 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 
 	public String id;
 	public String name;
-	//public Drawable icon;
-	//public Drawable icon36dp;
 	public ComponentInfo[] activities;
 	public ComponentInfo[] services;
 	public ComponentInfo[] permissions;
@@ -46,28 +44,9 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	}
 
 	@Override
-	public Drawable getIcon() {
-		return null; // icon;
+	public String getIconUri() {
+		return "app://" + id;
 	}
 
-	@Override
-	public Drawable getIcon36dp(Context ctx) {
-		//if (icon != null && icon36dp == null) {
-		//	int dp36 = (int) (ctx.getResources().getDisplayMetrics().density * 36f);
-		//	Bitmap src = BitmapUtil.drawableToBitmap(icon);
-		//	icon36dp = BitmapUtil.bitmapToDrawable(ctx, Bitmap.createScaledBitmap(src, dp36, dp36, true));
-		//}
-		//if (icon36dp == null) {
-		//	PackageManager pm = ctx.getPackageManager();
-		//	try {
-		//		PackageInfo pi = pm.getPackageInfo(id, PackageManager.GET_ACTIVITIES);
-		//		icon36dp = pi.applicationInfo.loadIcon(pm);
-		//	} catch (Exception e) {
-		//		// ignore
-		//	}
-		//}
-		//return icon36dp;
-		return null;
-	}
 
 }

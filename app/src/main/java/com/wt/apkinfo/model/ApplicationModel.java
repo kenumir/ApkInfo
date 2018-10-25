@@ -11,7 +11,6 @@ public interface ApplicationModel {
 
 	String getId();
 	String getName();
-	Drawable getIcon();
 	String getIconUri();
 
 }
