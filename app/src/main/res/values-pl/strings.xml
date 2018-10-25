@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Apk Info</string>
+    <string name="label_close">Zamknij</string>
+
+
+    <!-- main activity -->
+    <string name="main_menu_about">O aplikacji</string>
+    <string name="main_menu_search">Szukaj</string>
+
+    <string name="main_no_apps_found">Nie znaleziono aplikacji o podanej nazwie</string>
+
+
+    <!-- about -->
+    <string name="about_title">O aplikacji</string>
+
+
+    <!-- Application details -->
+    <string name="app_details_title">Informacje o aplikacji</string>
+    <string name="app_details_version_name">Nazwa wersji</string>
+    <string name="app_details_version_code">Kod wersji</string>
+    <string name="app_details_target_sdk">Docelowa wersja SDK</string>
+    <string name="app_details_min_sdk">Minimalna wersja SDK</string>
+    <string name="app_details_installation_update_time">Instalacja/Aktualizacja</string>
+    <string name="app_details_signature">Sygnatura</string>
+    <string name="app_details_meta">Metadane aplikacji (%d)</string>
+    <string name="app_details_permissions">Uprawnienia (%d)</string>
+    <string name="app_details_activities">Ekrany (Activity) (%d)</string>
+    <string name="app_details_services">Usługi (%d)</string>
+    <string name="app_details_receivers">Receivers (%d)</string>
+    <string name="app_details_providers">Providers (%d)</string>
+    <string name="app_details_share">Udostępnij plik APK</string>
+    <string name="app_details_info">Systemowe informacje</string>
+    <string name="app_details_play_store">Szukaj w Play Store</string>
+    <string name="app_details_run">Uruchom</string>
+
+    <!-- Application details - toasts -->
+    <string name="app_details_toast_load_info">Błąd ładowania informacji o aplikacji</string>
+    <string name="app_details_toast_copied_to_clipboard">Skopiowano do schowka</string>
+    <string name="app_details_toast_no_launcher_activity">Nie można uruchomić</string>
+
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_desc" translatable="false">Apk Info v%s\nAuthor: Michał (Kenumir) Szwarc\nContact: https://twitter.com/kenumir</string>
+    <string name="about_open" translatable="false">\@kenumir</string>
+</resources>

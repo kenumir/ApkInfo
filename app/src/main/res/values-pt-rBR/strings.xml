@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Apk Info</string>
+    <string name="label_close">Perto</string>
+
+
+    <!-- main activity -->
+    <string name="main_menu_about">Sobre o app</string>
+    <string name="main_menu_search">Procurar</string>
+
+    <string name="main_no_apps_found">Nenhum aplicativo encontrado com nome próprio</string>
+
+
+    <!-- about -->
+    <string name="about_title">Sobre o app</string>
+
+
+    <!-- Application details -->
+    <string name="app_details_title">Informação da Aplicação</string>
+    <string name="app_details_version_name">Nome da versão</string>
+    <string name="app_details_version_code">Código da versão</string>
+    <string name="app_details_target_sdk">Target SDK version</string>
+    <string name="app_details_min_sdk">Versão mínima do SDK</string>
+    <string name="app_details_installation_update_time">Tempo de instalação / atualização</string>
+    <string name="app_details_signature">Assinatura</string>
+    <string name="app_details_meta">Metadados de aplicativos (%d)</string>
+    <string name="app_details_permissions">Permissões (%d)</string>
+    <string name="app_details_activities">Activities (%d)</string>
+    <string name="app_details_services">Services (%d)</string>
+    <string name="app_details_receivers">Receivers (%d)</string>
+    <string name="app_details_providers">Providers (%d)</string>
+    <string name="app_details_share">Compartilhar arquivo APK</string>
+    <string name="app_details_info">Informações do aplicativo do sistema</string>
+    <string name="app_details_play_store">Pesquisar na Play Store</string>
+    <string name="app_details_run">Corrida</string>
+
+    <!-- Application details - toasts -->
+    <string name="app_details_toast_load_info">Erro ao carregar informações do aplicativo</string>
+    <string name="app_details_toast_copied_to_clipboard">Copiado para a área de transferência</string>
+    <string name="app_details_toast_no_launcher_activity">Não pode começar</string>
+
+</resources>

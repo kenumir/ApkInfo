@@ -12,8 +12,6 @@
 
     <!-- about -->
     <string name="about_title">About app</string>
-    <string name="about_desc">Apk Info v%s\nAuyhor: Michał (Kenumir) Szwarc\nContact: https://plus.google.com/u/0/+MichałSzwarc</string>
-    <string name="about_open">Google+</string>
 
 
     <!-- Application details -->

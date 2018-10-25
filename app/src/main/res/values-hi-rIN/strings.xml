@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Apk Info</string>
+    <string name="label_close">बंद करे</string>
+
+
+    <!-- main activity -->
+    <string name="main_menu_about">ऐप के बारे में</string>
+    <string name="main_menu_search">खोज</string>
+
+    <string name="main_no_apps_found">दिए गए नाम के साथ कोई एप्लिकेशन नहीं मिला</string>
+
+
+    <!-- about -->
+    <string name="about_title">ऐप के बारे में</string>
+
+
+    <!-- Application details -->
+    <string name="app_details_title">आवेदन जानकारी</string>
+    <string name="app_details_version_name">संस्करण का नाम</string>
+    <string name="app_details_version_code">संस्करण कोड</string>
+    <string name="app_details_target_sdk">लक्ष्य एसडीके संस्करण</string>
+    <string name="app_details_min_sdk">न्यूनतम एसडीके संस्करण</string>
+    <string name="app_details_installation_update_time">स्थापना / अद्यतन समय</string>
+    <string name="app_details_signature">हस्ताक्षर</string>
+    <string name="app_details_meta">ऐप मेटाडाटा (%d)</string>
+    <string name="app_details_permissions">अनुमतियां (%d)</string>
+    <string name="app_details_activities">Activities (%d)</string>
+    <string name="app_details_services">Services (%d)</string>
+    <string name="app_details_receivers">Receivers (%d)</string>
+    <string name="app_details_providers">Providers (%d)</string>
+    <string name="app_details_share">एपीके फ़ाइल साझा करें</string>
+    <string name="app_details_info">सिस्टम ऐप जानकारी</string>
+    <string name="app_details_play_store">Play Store में खोजें</string>
+    <string name="app_details_run">रन</string>
+
+    <!-- Application details - toasts -->
+    <string name="app_details_toast_load_info">त्रुटि जानकारी आवेदन जानकारी लोड करें</string>
+    <string name="app_details_toast_copied_to_clipboard">क्लिपबोर्ड पर नकल</string>
+    <string name="app_details_toast_no_launcher_activity">शुरू नहीं कर सकता</string>
+
+</resources>

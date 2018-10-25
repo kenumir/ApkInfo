@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Apk Info</string>
+    <string name="label_close">Zavrieť</string>
+
+
+    <!-- main activity -->
+    <string name="main_menu_about">O aplikácii</string>
+    <string name="main_menu_search">Vyhľadávanie</string>
+
+    <string name="main_no_apps_found">Žiadne aplikácie neboli nájdené s daným menom</string>
+
+
+    <!-- about -->
+    <string name="about_title">O aplikácii</string>
+
+
+    <!-- Application details -->
+    <string name="app_details_title">Informácie o aplikácii</string>
+    <string name="app_details_version_name">Názov verzie</string>
+    <string name="app_details_version_code">Kód verzie</string>
+    <string name="app_details_target_sdk">Cieľová verzia SDK</string>
+    <string name="app_details_min_sdk">Minimálna verzia SDK</string>
+    <string name="app_details_installation_update_time">Čas inštalácie / aktualizácie</string>
+    <string name="app_details_signature">Podpis</string>
+    <string name="app_details_meta">Metadáta aplikácií (%d)</string>
+    <string name="app_details_permissions">Povolenie (%d)</string>
+    <string name="app_details_activities">Activities (%d)</string>
+    <string name="app_details_services">Služby (%d)</string>
+    <string name="app_details_receivers">Receivers (%d)</string>
+    <string name="app_details_providers">Providers (%d)</string>
+    <string name="app_details_share">Zdieľajte súbor APK</string>
+    <string name="app_details_info">Aplikácia Systém info</string>
+    <string name="app_details_play_store">Vyhľadávanie v Play Store</string>
+    <string name="app_details_run">Utekať</string>
+
+    <!-- Application details - toasts -->
+    <string name="app_details_toast_load_info">Chyba pri načítaní informácií o aplikácii</string>
+    <string name="app_details_toast_copied_to_clipboard">Skopírovať do schránky</string>
+    <string name="app_details_toast_no_launcher_activity">Nemožno spustiť</string>
+
+</resources>

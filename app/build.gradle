@@ -12,11 +12,11 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.1.6"
+        versionCode 10
+        versionName "1.1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        resConfigs "en", "pl"
+        //resConfigs "en", "pl", "hi", "hi-rIN",
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "long", "APP_BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
