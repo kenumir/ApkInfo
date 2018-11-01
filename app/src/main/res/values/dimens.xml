@@ -1,3 +1,4 @@
 <resources>
     <dimen name="app_icon_size">40dp</dimen>
+    <dimen name="app_icon_margins">8dp</dimen>
 </resources>
