@@ -72,6 +72,8 @@ public class AppInfoTask extends AsyncTask<Context, Void, ApplicationDetailsEnti
 					 */
             result.id = appId;
             result.name = pi.applicationInfo.loadLabel(pm).toString();
+            result.dataDir = pi.applicationInfo.dataDir;
+            result.nativeLibraryDir = pi.applicationInfo.nativeLibraryDir;
 
             int counter;
 

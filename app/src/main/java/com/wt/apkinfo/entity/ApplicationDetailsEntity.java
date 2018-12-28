@@ -18,6 +18,8 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 
 	public String id;
 	public String name;
+	public String dataDir;
+	public String nativeLibraryDir;
 	public ComponentInfo[] activities;
 	public ComponentInfo[] services;
 	public ComponentInfo[] permissions;

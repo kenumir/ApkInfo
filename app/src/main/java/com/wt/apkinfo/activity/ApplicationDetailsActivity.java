@@ -372,6 +372,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 				data.add(new ComponentInfo(res.getString(R.string.app_details_signature), entity.signatures[0]));
 			}
 
+			data.add(new ComponentInfo("Data Directory", entity.dataDir));
+			data.add(new ComponentInfo("Native Library Directory", entity.nativeLibraryDir));
+
 			if (entity.metadata != null) {
 				data.add(new ItemHeader(res.getString(R.string.app_details_meta, entity.metadata.length), entity.metadata));
 			}
