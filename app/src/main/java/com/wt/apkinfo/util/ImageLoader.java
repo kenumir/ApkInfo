@@ -1,6 +1,7 @@
 package com.wt.apkinfo.util;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.hivedi.console.Console;
+import com.hivedi.era.ERA;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Request;
@@ -45,7 +47,7 @@ public class ImageLoader {
     private Picasso mPicasso;
 
     private ImageLoader(Context ctx) {
-        final PackageManager pm = ctx.getPackageManager();
+        final PackageManager pm = ctx.getApplicationContext().getPackageManager();
         mPicasso = new Picasso.Builder(ctx)
                 .memoryCache(new LruCache(ctx))
                 .addRequestHandler(new RequestHandler() {
@@ -57,14 +59,18 @@ public class ImageLoader {
                     @Override
                     public Result load(Request request, int networkPolicy) throws IOException {
                         try {
-                            return new Result(
-                                    BitmapUtil.drawableToBitmap(pm.getApplicationIcon(request.uri.getHost())),
-                                    Picasso.LoadedFrom.DISK
-                            );
+                            // skip use BitmapUtil.drawableToBitmap, simple way to get bitmap
+                            Drawable d = pm.getApplicationIcon(request.uri.getHost());
+                            Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                            Canvas canvas = new Canvas(b);
+                            d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                            d.draw(canvas);
+                            return new Result(b, Picasso.LoadedFrom.DISK);
                         } catch (Exception e) {
                             if (BuildConfig.DEBUG) {
                                 Console.loge("ImageLoader.load: " + e, e);
                             }
+                            ERA.logException(e);
                         }
                         return null;
                     }

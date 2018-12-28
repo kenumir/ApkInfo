@@ -17,6 +17,9 @@ public class BitmapUtil {
 	public static Bitmap drawableToBitmap (Drawable drawable) {
 		Bitmap bitmap = null;
 
+		// on Xiaomi devices generate exception: IllegalStateException: Can't parcel a recycled bitmap
+		// at miui.security.ISecurityManager$Stub$Proxy.saveIcon(ISecurityManager.java:1736)
+		// at miui.security.SecurityManager.saveIcon(SecurityManager.java:311)
 		if (drawable instanceof BitmapDrawable) {
 			BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
 			if(bitmapDrawable.getBitmap() != null) {
