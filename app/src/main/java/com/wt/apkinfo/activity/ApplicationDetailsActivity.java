@@ -26,6 +26,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.view.LayoutInflater;
@@ -374,6 +375,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 			data.add(new ComponentInfo("Data Directory", entity.dataDir));
 			data.add(new ComponentInfo("Native Library Directory", entity.nativeLibraryDir));
+			data.add(new ComponentInfo("Installer Package", TextUtils.isEmpty(entity.installerPackage) ?
+					res.getString(R.string.app_details_none) :
+					entity.installerPackage));
 
 			if (entity.metadata != null) {
 				data.add(new ItemHeader(res.getString(R.string.app_details_meta, entity.metadata.length), entity.metadata));

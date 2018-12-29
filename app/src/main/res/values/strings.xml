@@ -32,6 +32,7 @@
     <string name="app_details_info">System app info</string>
     <string name="app_details_play_store">Search in Play Store</string>
     <string name="app_details_run">Run</string>
+    <string name="app_details_none">None</string>
 
     <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">Error load application info</string>

@@ -32,6 +32,7 @@
     <string name="app_details_info">Systemowe informacje</string>
     <string name="app_details_play_store">Szukaj w Play Store</string>
     <string name="app_details_run">Uruchom</string>
+    <string name="app_details_none">Brak</string>
 
     <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">Błąd ładowania informacji o aplikacji</string>

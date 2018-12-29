@@ -28,6 +28,7 @@ public class ApplicationDetailsEntity implements ApplicationDetailsModel {
 	public ComponentInfo[] metadata;
 	public String[] signatures;
 	public String versionName;
+	public String installerPackage;
 	public int versionCode;
 	public long firstInstallTime;
 	public long lastUpdateTime;

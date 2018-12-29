@@ -2,6 +2,7 @@ package com.wt.apkinfo.db;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
@@ -46,6 +47,7 @@ public class AppListTask extends AsyncTask<Context, Void, List<ApplicationEntity
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PackageManager pm = context.getPackageManager();
         List<ResolveInfo> pkgAppsList = pm.queryIntentActivities(mainIntent, 0);
+        //List<ApplicationInfo> pkgAppsList = pm.getInstalledApplications(0);//pm.queryIntentActivities(mainIntent, 0);
         List<ApplicationEntity> list = new ArrayList<>();
 
         if (pkgAppsList != null && pkgAppsList.size() > 0) {
@@ -59,7 +61,8 @@ public class AppListTask extends AsyncTask<Context, Void, List<ApplicationEntity
                     continue;
                 }
 
-                e.iconUri = "app://" + ri.activityInfo.packageName;
+                e.iconUri = "app://" + e.id;
+                //e.installerPackage = pm.getInstallerPackageName(e.id);
 
                 list.add(e);
             }

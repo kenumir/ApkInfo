@@ -9,7 +9,6 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import com.hivedi.era.ERA;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.entity.ApplicationDetailsEntity;
 import com.wt.apkinfo.entity.ComponentInfo;
-import com.wt.apkinfo.util.BitmapUtil;
 
 import java.security.MessageDigest;
 import java.util.Locale;
@@ -79,6 +77,7 @@ public class AppInfoTask extends AsyncTask<Context, Void, ApplicationDetailsEnti
 
             result.versionName = pi.versionName;
             result.versionCode = pi.versionCode;
+            result.installerPackage = pm.getInstallerPackageName(appId);
             result.firstInstallTime = pi.firstInstallTime;
             result.lastUpdateTime = pi.lastUpdateTime;
             result.apkFile = pi.applicationInfo.publicSourceDir;
