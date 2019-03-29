@@ -36,7 +36,7 @@ task clean(type: Delete) {
 ext.versions = [
         compileSdk: 28,
         minSdkVersion: 17,
-        targetSdkVersion: 27
+        targetSdkVersion: 28
 ]
 
 ext.libraries = [
