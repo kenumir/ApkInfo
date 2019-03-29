@@ -1,19 +1,9 @@
 package com.wt.apkinfo.fragment;
 
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
@@ -42,6 +31,15 @@ import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -135,12 +133,7 @@ public class ApplicationsFragment extends Fragment {
 								.content(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
 								.positiveText(R.string.label_close)
 								.neutralText(R.string.about_open)
-								.onNeutral(new MaterialDialog.SingleButtonCallback() {
-									@Override
-									public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-										IntentHelper.openInBrowser(getActivity(), "https://plus.google.com/u/0/+Micha%C5%82Szwarc");
-									}
-								})
+								.onNeutral((dialog, which) -> IntentHelper.openInBrowser(getActivity(), "https://twitter.com/kenumir"))
 								.build()
 								.show();
 					}
@@ -149,17 +142,14 @@ public class ApplicationsFragment extends Fragment {
 			})
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		menu.add(R.string.rate_title)
-                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (getFragmentManager() != null) {
-                            RateAppDialog d = new RateAppDialog();
-                            d.setTargetFragment(ApplicationsFragment.this, 1);
-                            d.show(getFragmentManager(), "rate");
-                        }
-                        return false;
-                    }
-                })
+                .setOnMenuItemClickListener(item -> {
+					if (getFragmentManager() != null) {
+						RateAppDialog d = new RateAppDialog();
+						d.setTargetFragment(ApplicationsFragment.this, 1);
+						d.show(getFragmentManager(), "rate");
+					}
+					return false;
+				})
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		return res;
 	}
@@ -168,13 +158,10 @@ public class ApplicationsFragment extends Fragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (adapter == null) {
-			adapter = new ApplicationsListAdapter(new OnItemClick() {
-				@Override
-				public void onItemClick(View v, ApplicationEntity item, ApplicationsItemHolder holder) {
-					if (getActivity() != null) {
-						ApplicationDetailsActivity.start(getActivity(), item.id, item.name, holder.icon1);
-                        UserEngagement.incUserRateConditionValue(getActivity());
-					}
+			adapter = new ApplicationsListAdapter((v, item, holder) -> {
+				if (getActivity() != null) {
+					ApplicationDetailsActivity.start(getActivity(), item.id, item.name, holder.icon1);
+					UserEngagement.incUserRateConditionValue(getActivity());
 				}
 			});
 		}
@@ -182,18 +169,15 @@ public class ApplicationsFragment extends Fragment {
 		recycler.setAdapter(adapter);
 		ApplicationListViewModel viewModel = ViewModelProviders.of(this).get(ApplicationListViewModel.class);
 		viewModel.setup(null);
-		viewModel.getApplications().observe(this, new Observer<List<ApplicationEntity>>() {
-			@Override
-			public void onChanged(@Nullable List<ApplicationEntity> apps) {
-				if (apps != null) {
-					adapter.setData(apps);
-					overlayFrame.setVisibility(View.GONE);
-					overlayNoApps.setVisibility(apps.size() > 0 ? View.GONE : View.VISIBLE);
-				} else {
-					adapter.setData(null);
-					overlayFrame.setVisibility(View.GONE);
-					overlayNoApps.setVisibility(View.VISIBLE);
-				}
+		viewModel.getApplications().observe(this, apps -> {
+			if (apps != null) {
+				adapter.setData(apps);
+				overlayFrame.setVisibility(View.GONE);
+				overlayNoApps.setVisibility(apps.size() > 0 ? View.GONE : View.VISIBLE);
+			} else {
+				adapter.setData(null);
+				overlayFrame.setVisibility(View.GONE);
+				overlayNoApps.setVisibility(View.VISIBLE);
 			}
 		});
 	}
@@ -244,12 +228,9 @@ public class ApplicationsFragment extends Fragment {
 			final ApplicationEntity entry = mData.get(position);
 			holder.text1.setText(entry.getName());
 			holder.text2.setText(entry.getId());
-			holder.itemView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (mOnItemClick != null) {
-						mOnItemClick.onItemClick(view, entry, holder);
-					}
+			holder.itemView.setOnClickListener(view -> {
+				if (mOnItemClick != null) {
+					mOnItemClick.onItemClick(view, entry, holder);
 				}
 			});
 

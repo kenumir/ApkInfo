@@ -1,9 +1,10 @@
 package com.wt.apkinfo.util;
 
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by kenumir on 04.10.2017.

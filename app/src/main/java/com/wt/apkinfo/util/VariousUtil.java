@@ -3,9 +3,10 @@ package com.wt.apkinfo.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 
 import com.wt.apkinfo.BuildConfig;
+
+import androidx.annotation.Nullable;
 
 public class VariousUtil {
 

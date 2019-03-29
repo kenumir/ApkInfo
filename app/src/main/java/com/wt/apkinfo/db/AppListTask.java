@@ -2,11 +2,9 @@ package com.wt.apkinfo.db;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
@@ -15,6 +13,8 @@ import com.wt.apkinfo.entity.ApplicationEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by kenumir on 22.11.2017.

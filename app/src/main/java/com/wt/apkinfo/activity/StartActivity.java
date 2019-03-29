@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.google.firebase.perf.metrics.AddTrace;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -32,13 +33,10 @@ public class StartActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				startActivity(new Intent(getApplicationContext(), MainActivity.class));
-				overridePendingTransition(0, 0);
-				finish();
-			}
+		new Handler(Looper.getMainLooper()).postDelayed(() -> {
+			startActivity(new Intent(getApplicationContext(), MainActivity.class));
+			overridePendingTransition(0, 0);
+			finish();
 		}, 1000);
 	}
 }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
@@ -13,6 +11,9 @@ import com.wt.apkinfo.BuildConfig;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class UserEngagement {
 

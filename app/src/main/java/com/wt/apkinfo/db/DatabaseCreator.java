@@ -1,9 +1,6 @@
 package com.wt.apkinfo.db;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
@@ -14,6 +11,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 /**
  * Created by kenumir on 15.09.2017.

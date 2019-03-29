@@ -3,11 +3,6 @@ package com.wt.apkinfo.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +15,11 @@ import com.wt.apkinfo.entity.ComponentInfo;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -85,13 +85,14 @@ public class InfoListDialog extends DialogFragment {
 			data = d;
 		}
 
+		@NonNull
 		@Override
-		public ListItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		public ListItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 			return new ListItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_component_info, parent, false));
 		}
 
 		@Override
-		public void onBindViewHolder(ListItemHolder holder, int position) {
+		public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
 			ComponentInfo d = data.get(position);
 			holder.text1.setText(d.name);
 			holder.text2.setText(d.className);

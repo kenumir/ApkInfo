@@ -11,7 +11,6 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.Nullable;
 
 import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
@@ -22,6 +21,8 @@ import com.wt.apkinfo.entity.ComponentInfo;
 import java.security.MessageDigest;
 import java.util.Locale;
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by kenumir on 22.11.2017.

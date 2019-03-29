@@ -1,9 +1,8 @@
 package com.wt.apkinfo.entity;
 
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-
 import com.wt.apkinfo.model.ApplicationModel;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by kenumir on 15.09.2017.

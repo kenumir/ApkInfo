@@ -1,15 +1,16 @@
 package com.wt.apkinfo.viewmodel;
 
 import android.app.Application;
-import android.arch.core.util.Function;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Transformations;
 
 import com.wt.apkinfo.db.DatabaseCreator;
 import com.wt.apkinfo.entity.ApplicationEntity;
 
 import java.util.List;
+
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
 /**
  * Created by kenumir on 15.09.2017.

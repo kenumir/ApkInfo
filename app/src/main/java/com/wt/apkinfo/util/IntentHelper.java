@@ -3,10 +3,11 @@ package com.wt.apkinfo.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by kenumir on 24.09.2017.

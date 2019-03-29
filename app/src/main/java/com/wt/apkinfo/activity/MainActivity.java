@@ -2,7 +2,6 @@ package com.wt.apkinfo.activity;
 
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
 import com.android.installreferrer.api.InstallReferrerClient;
@@ -16,6 +15,7 @@ import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
 import com.wt.apkinfo.util.UserEngagement;
 
+import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -51,13 +51,10 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 		}
 
 		if (savedInstanceState == null) {
-			UserEngagement.showRateDialog(this, new Runnable() {
-				@Override
-				public void run() {
-					if (!isFinishing()) {
-						new RateAppDialog().show(getSupportFragmentManager(), "rate_app");
-						UserEngagement.markRateDialogAsOpened(getApplicationContext());
-					}
+			UserEngagement.showRateDialog(this, () -> {
+				if (!isFinishing()) {
+					new RateAppDialog().show(getSupportFragmentManager(), "rate_app");
+					UserEngagement.markRateDialogAsOpened(getApplicationContext());
 				}
 			});
 		}

@@ -3,23 +3,25 @@ apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
 
-apply from: '../dependencies.gradle'
-
 android {
-    compileSdkVersion 28
+    compileSdkVersion versions.compileSdk
 
     defaultConfig {
         applicationId "com.wt.apkinfo"
-        minSdkVersion 15
-        targetSdkVersion 28
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
         versionCode 14
         versionName "1.2.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        //resConfigs "en", "pl", "hi", "hi-rIN",
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "long", "APP_BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     signingConfigs {
@@ -76,34 +78,29 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:appcompat-v7:' + versions.supportLib
-    implementation 'com.android.support:support-v13:' + versions.supportLib
-    implementation 'com.android.support:support-v4:' + versions.supportLib
-    implementation 'com.android.support:support-annotations:' + versions.supportLib
-    implementation 'com.android.support:support-fragment:' + versions.supportLib
-    implementation "com.android.support:recyclerview-v7:" + versions.supportLib
-    implementation "com.android.support:design:" + versions.supportLib
+    implementation libraries.androidx.appcompat
+    implementation libraries.androidx.recyclerview
 
-    implementation 'com.android.installreferrer:installreferrer:' + versions.installreferrer
-    implementation 'com.squareup.picasso:picasso:' + versions.picasso
+    implementation libraries.android.arch.lifecycle.runtime
+    implementation libraries.android.arch.lifecycle.extensions
+    annotationProcessor libraries.android.arch.lifecycle.compiler
 
-    implementation 'android.arch.lifecycle:runtime:' + versions.lifecycle
-    implementation 'android.arch.lifecycle:extensions:' + versions.lifecycle
-    annotationProcessor 'android.arch.lifecycle:compiler:' + versions.lifecycle
+    implementation libraries.android.installreferrer
 
-    implementation 'com.google.firebase:firebase-core:' + versions.firebase.core
-    implementation 'com.google.firebase:firebase-perf:' + versions.firebase.performance
+    implementation libraries.google.material
+    implementation libraries.google.firebase.core
+    implementation libraries.google.firebase.perf
 
-    implementation 'com.jakewharton:butterknife:' + versions.butterknife
-    annotationProcessor 'com.jakewharton:butterknife-compiler:' + versions.butterknife
+    implementation libraries.squareup.picasso
+    implementation libraries.butterknife
+    annotationProcessor libraries.butterknifeCompiler
 
-    implementation 'com.github.Hivedi:Console:' + versions.console
-    implementation 'com.github.Hivedi:ErrorReportAdapter:' + versions.era
+    implementation libraries.hivedi.console
+    implementation libraries.hivedi.era
 
-    implementation('com.crashlytics.sdk.android:crashlytics:' + versions.crashlytics + '@aar') { transitive = true }
-    implementation('com.crashlytics.sdk.android:answers:' + versions.answers + '@aar') { transitive = true }
-    implementation 'com.github.anrwatchdog:anrwatchdog:' + versions.anrwatchdog
-    implementation 'com.afollestad.material-dialogs:core:' + versions.materialDialogs
+    implementation libraries.materialDialogs
+    implementation libraries.anrwatchdog
+    implementation libraries.crashlytics
 }
 
 apply plugin: 'com.google.gms.google-services'
