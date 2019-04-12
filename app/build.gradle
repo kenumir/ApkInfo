@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -10,8 +11,8 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 14
-        versionName "1.2.1"
+        versionCode 15
+        versionName "1.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -80,10 +81,12 @@ dependencies {
 
     implementation libraries.androidx.appcompat
     implementation libraries.androidx.recyclerview
-
-    implementation libraries.android.arch.lifecycle.runtime
-    implementation libraries.android.arch.lifecycle.extensions
-    annotationProcessor libraries.android.arch.lifecycle.compiler
+    implementation libraries.androidx.vectordrawable
+    implementation libraries.androidx.lifecycle.extensions
+    implementation libraries.androidx.lifecycle.livedata
+    implementation libraries.androidx.lifecycle.runtime
+    implementation libraries.androidx.lifecycle.java8
+    implementation libraries.androidx.lifecycle.viewmodel
 
     implementation libraries.android.installreferrer
 
@@ -92,15 +95,18 @@ dependencies {
     implementation libraries.google.firebase.perf
 
     implementation libraries.squareup.picasso
-    implementation libraries.butterknife
-    annotationProcessor libraries.butterknifeCompiler
+    //implementation libraries.butterknife
+    //annotationProcessor libraries.butterknifeCompiler
 
     implementation libraries.hivedi.console
     implementation libraries.hivedi.era
 
     implementation libraries.materialDialogs
-    implementation libraries.anrwatchdog
+    //implementation libraries.anrwatchdog
     implementation libraries.crashlytics
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.1.0-alpha05'
 }
 
 apply plugin: 'com.google.gms.google-services'

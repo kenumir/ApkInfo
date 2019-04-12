@@ -5,9 +5,6 @@ import android.os.StrictMode;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
-import com.github.anrwatchdog.ANRError;
-import com.github.anrwatchdog.ANRWatchDog;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
@@ -38,14 +35,6 @@ public class App extends Application {
 			Console.setEnabled(true);
 			Console.setTag("ApkInfo");
 			Console.addLogWriterLogCat();
-		} else {
-			new ANRWatchDog().setReportMainThreadOnly().setANRListener(new ANRWatchDog.ANRListener() {
-				@Override
-				public void onAppNotResponding(ANRError error) {
-					Answers.getInstance().logCustom(new CustomEvent("ANR Error Detected"));
-					ERA.logException(error);
-				}
-			}).start();
 		}
 
 		final Fabric fabric = new Fabric.Builder(this)

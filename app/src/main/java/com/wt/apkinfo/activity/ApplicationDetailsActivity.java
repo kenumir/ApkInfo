@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -49,6 +50,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -56,8 +58,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by kenumir on 17.09.2017.
@@ -96,9 +96,8 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 		}
 	}
 
-	@BindView(R.id.toolbar) Toolbar toolbar;
-	@BindView(R.id.recycler) RecyclerView recycler;
-
+	private Toolbar toolbar;
+	private RecyclerView recycler;
 	private AppInfoAdapter mAppInfoAdapter;
 	private ComponentInfo[] selectedData;
 	private MenuItem shareMenuItem, appInfoMenu, playStoreMenu, runMenu;
@@ -112,7 +111,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			return;
 		}
 		setContentView(R.layout.activity_application_details);
-		ButterKnife.bind(this);
+
+		toolbar = findViewById(R.id.toolbar);
+		recycler = findViewById(R.id.recycler);
 
 		final String appId = getIntent().getStringExtra(KEY_APP_ID);
 		final String appName = getIntent().getStringExtra(KEY_APP_NAME);
@@ -137,76 +138,68 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 
 					mAppInfoAdapter.setData(productEntity);
 					supportStartPostponedEnterTransition();
-					shareMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-						@Override
-						public boolean onMenuItemClick(MenuItem menuItem) {
-							try {
-								File srcFile = new File(productEntity.apkFile);
-								Intent share = new Intent();
-								share.setAction(Intent.ACTION_SEND);
-								share.setType("application/vnd.android.package-archive");
-								share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(srcFile));
-								startActivity(Intent.createChooser(share, getResources().getString(R.string.app_details_share)));
-							} catch (Exception e) {
-								Crashlytics.logException(e);
-							}
-							return false;
+					shareMenuItem.setOnMenuItemClickListener(menuItem -> {
+						try {
+							File srcFile = new File(productEntity.apkFile);
+							Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider", srcFile);
+							Intent share = new Intent();
+							share.setAction(Intent.ACTION_SEND);
+							share.setType("application/vnd.android.package-archive");
+							share.putExtra(Intent.EXTRA_STREAM, photoURI);
+							share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+							startActivity(Intent.createChooser(share, getResources().getString(R.string.app_details_share)));
+							Console.logi("file=" + srcFile);
+						} catch (Exception e) {
+							Console.loge("e=" + e, e);
+							Crashlytics.logException(e);
 						}
+						return false;
 					}).setVisible(true);
-                    appInfoMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            ERA.log("Open app info: " + appId);
-                            try {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                intent.setData(Uri.parse("package:" + appId));
-                                startActivity(intent);
-                            } catch (ActivityNotFoundException e) {
-								ERA.logException(e);
-							}
-                            return false;
-                        }
-                    }).setVisible(true);
-					playStoreMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-						@Override
-						public boolean onMenuItemClick(MenuItem menuItem) {
-							ERA.log("Open Play Store: " + appId);
+                    appInfoMenu.setOnMenuItemClickListener(menuItem -> {
+						ERA.log("Open app info: " + appId);
+						try {
+							Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+							intent.setData(Uri.parse("package:" + appId));
+							startActivity(intent);
+						} catch (ActivityNotFoundException e) {
+							ERA.logException(e);
+						}
+						return false;
+					}).setVisible(true);
+					playStoreMenu.setOnMenuItemClickListener(menuItem -> {
+						ERA.log("Open Play Store: " + appId);
+						try {
+							startActivity(
+									new Intent(
+											Intent.ACTION_VIEW,
+											Uri.parse("market://details?id=" + appId)
+									)
+							);
+							return true;
+						} catch (Exception e) {
 							try {
 								startActivity(
 										new Intent(
 												Intent.ACTION_VIEW,
-												Uri.parse("market://details?id=" + appId)
+												Uri.parse("https://play.google.com/store/apps/details?id=" + appId)
 										)
 								);
 								return true;
-							} catch (Exception e) {
-								try {
-									startActivity(
-											new Intent(
-													Intent.ACTION_VIEW,
-													Uri.parse("https://play.google.com/store/apps/details?id=" + appId)
-											)
-									);
-									return true;
-								} catch (Exception e2) {
-									ERA.logException(e2);
-								}
+							} catch (Exception e2) {
+								ERA.logException(e2);
 							}
-							return false;
 						}
+						return false;
 					}).setVisible(true);
-					runMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-						@Override
-						public boolean onMenuItemClick(MenuItem menuItem) {
-							ERA.log("Run: " + appId);
-							Intent runIntent = getPackageManager().getLaunchIntentForPackage(appId);
-							if (runIntent != null) {
-								startActivity(runIntent);
-							} else {
-								Toast.makeText(getApplicationContext(), R.string.app_details_toast_no_launcher_activity, Toast.LENGTH_SHORT).show();
-							}
-							return false;
+					runMenu.setOnMenuItemClickListener(menuItem -> {
+						ERA.log("Run: " + appId);
+						Intent runIntent = getPackageManager().getLaunchIntentForPackage(appId);
+						if (runIntent != null) {
+							startActivity(runIntent);
+						} else {
+							Toast.makeText(getApplicationContext(), R.string.app_details_toast_no_launcher_activity, Toast.LENGTH_SHORT).show();
 						}
+						return false;
 					}).setVisible(true);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.app_details_toast_load_info, Toast.LENGTH_LONG).show();
@@ -243,19 +236,16 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 				selectedData = item.data;
 				// IllegalStateException:  Can not perform this action after onSaveInstanceState
 				ERA.log("isFinishing=" + isFinishing());
-				InfoListDialog
+				InfoListDialog.Companion
 						.newInstance(item.title)
 						.show(getSupportFragmentManager(), "dialog_info");
 			}
-		}, new OnComponentLongClick() {
-			@Override
-			public void onComponentLongClick(ComponentInfo item) {
-				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-				if (clipboard != null) {
-					ClipData clip = ClipData.newPlainText("ApkInfo", item.className);
-					clipboard.setPrimaryClip(clip);
-					Toast.makeText(getApplicationContext(), R.string.app_details_toast_copied_to_clipboard, Toast.LENGTH_SHORT).show();
-				}
+		}, item -> {
+			ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+			if (clipboard != null) {
+				ClipData clip = ClipData.newPlainText("ApkInfo", item.className);
+				clipboard.setPrimaryClip(clip);
+				Toast.makeText(getApplicationContext(), R.string.app_details_toast_copied_to_clipboard, Toast.LENGTH_SHORT).show();
 			}
 		});
 		recycler.setLayoutManager(new LinearLayoutManager(this));
@@ -420,25 +410,19 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 			if (holder instanceof HeaderHolder) {
 				final ItemHeader d = (ItemHeader) data.get(position);
 				((HeaderHolder) holder).setTitle(d.title);
-				holder.itemView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						if (mOnHeaderClick != null) {
-							mOnHeaderClick.onHeaderClick(d);
-						}
+				holder.itemView.setOnClickListener(view -> {
+					if (mOnHeaderClick != null) {
+						mOnHeaderClick.onHeaderClick(d);
 					}
 				});
 			} else if (holder instanceof ComponentInfoHolder) {
 				final ComponentInfo d = (ComponentInfo) data.get(position);
 				((ComponentInfoHolder) holder).update(d);
-				holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-					@Override
-					public boolean onLongClick(View view) {
-						if (mOnComponentLongClick != null) {
-							mOnComponentLongClick.onComponentLongClick(d);
-						}
-						return false;
+				holder.itemView.setOnLongClickListener(view -> {
+					if (mOnComponentLongClick != null) {
+						mOnComponentLongClick.onComponentLongClick(d);
 					}
+					return false;
 				});
 			}
 		}

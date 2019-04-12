@@ -14,18 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
 import com.hivedi.console.Console;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
-import com.wt.apkinfo.R2;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
 import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.util.ImageLoader;
-import com.wt.apkinfo.util.IntentHelper;
 import com.wt.apkinfo.util.UserEngagement;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
@@ -40,18 +37,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ApplicationsFragment extends Fragment {
 
-	@BindView(R2.id.recycler) RecyclerView recycler;
-	@BindView(R2.id.overlayFrame) FrameLayout overlayFrame;
-	@BindView(R2.id.overlayNoApps) LinearLayout overlayNoApps;
-	@BindView(R2.id.toolbar) Toolbar toolbar;
+	private RecyclerView recycler;
+	private FrameLayout overlayFrame;
+	private LinearLayout overlayNoApps;
+	private Toolbar toolbar;
 
 	private ApplicationsListAdapter adapter;
 	private String searchText = null;
@@ -80,7 +75,10 @@ public class ApplicationsFragment extends Fragment {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View res = inflater.inflate(R.layout.fragment_applications, container, false);
-		ButterKnife.bind(this, res);
+		recycler = res.findViewById(R.id.recycler);
+		overlayFrame = res.findViewById(R.id.overlayFrame);
+		overlayNoApps = res.findViewById(R.id.overlayNoApps);
+		toolbar = res.findViewById(R.id.toolbar);
 
 		if (savedInstanceState != null) {
 			searchText = savedInstanceState.getString("searchText");
@@ -124,21 +122,18 @@ public class ApplicationsFragment extends Fragment {
 		}
 
 		menu.add(R.string.main_menu_about)
-			.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-				@Override
-				public boolean onMenuItemClick(MenuItem menuItem) {
-					if (getActivity() != null) {
-						new MaterialDialog.Builder(getActivity())
-								.title(R.string.about_title)
-								.content(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
-								.positiveText(R.string.label_close)
-								.neutralText(R.string.about_open)
-								.onNeutral((dialog, which) -> IntentHelper.openInBrowser(getActivity(), "https://twitter.com/kenumir"))
-								.build()
-								.show();
-					}
-					return false;
+			.setOnMenuItemClickListener(menuItem -> {
+				if (getActivity() != null) {
+					//new MaterialDialog(getActivity())
+					//		.setTitle(R.string.about_title)
+					//		.(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
+					//		.positiveText(R.string.label_close)
+					//		.neutralText(R.string.about_open)
+					//		.onNeutral((dialog, which) -> IntentHelper.openInBrowser(getActivity(), "https://twitter.com/kenumir"))
+					//		.build()
+					//		.show();
 				}
+				return false;
 			})
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		menu.add(R.string.rate_title)
@@ -248,13 +243,15 @@ public class ApplicationsFragment extends Fragment {
 	@SuppressWarnings("WeakerAccess")
 	public static class ApplicationsItemHolder extends RecyclerView.ViewHolder {
 
-		@BindView(R2.id.text1) TextView text1;
-		@BindView(R2.id.text2) TextView text2;
-		@BindView(R2.id.icon1) ImageView icon1;
+		public TextView text1;
+		public TextView text2;
+		public ImageView icon1;
 
 		public ApplicationsItemHolder(View itemView) {
 			super(itemView);
-			ButterKnife.bind(this, itemView);
+			text1 = itemView.findViewById(R.id.text1);
+			text2 = itemView.findViewById(R.id.text2);
+			icon1 = itemView.findViewById(R.id.icon1);
 		}
 
 		public void update(ApplicationEntity entry) {

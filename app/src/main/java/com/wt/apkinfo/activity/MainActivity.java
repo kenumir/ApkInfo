@@ -2,7 +2,6 @@ package com.wt.apkinfo.activity;
 
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.widget.FrameLayout;
 
 import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
@@ -10,18 +9,13 @@ import com.android.installreferrer.api.ReferrerDetails;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.era.ERA;
 import com.wt.apkinfo.R;
-import com.wt.apkinfo.R2;
 import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
 import com.wt.apkinfo.util.UserEngagement;
 
 import androidx.appcompat.app.AppCompatActivity;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements InstallReferrerStateListener {
-
-	@BindView(R2.id.mainFrame) FrameLayout mainFrame;
 
 	private InstallReferrerClient mReferrerClient;
 	private ApplicationsFragment mApplicationsFragment;
@@ -31,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ButterKnife.bind(this);
 
 		mApplicationsFragment = (ApplicationsFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.mainFrame);
