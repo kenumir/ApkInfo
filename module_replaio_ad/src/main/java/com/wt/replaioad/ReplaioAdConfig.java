@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 public class ReplaioAdConfig {
 
     public final static String REPLAIO_PACKAGE = "com.hv.replaio";
+    public final static String REFERRER = "&referrer=utm_source%3Dkenumir%26utm_medium%3Dapkinfo";
 
     private final ExecutorService exec = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override public Thread newThread(@NonNull Runnable runnable) {

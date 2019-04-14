@@ -38,12 +38,12 @@ public class ReplaioAdView extends FrameLayout {
         childView.findViewById(R.id.replaio_ad_installBtn).setOnClickListener(v -> {
             try {
                 context.startActivity(
-                        new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE))
+                        new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE + ReplaioAdConfig.REFERRER))
                 );
             } catch (Exception e) {
                 try {
                     context.startActivity(
-                            new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE))
+                            new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE + ReplaioAdConfig.REFERRER))
                     );
                 } catch (Exception e2) {
                     // ignore
