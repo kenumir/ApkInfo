@@ -8,6 +8,7 @@ import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.era.ERA;
+import com.wt.apkinfo.App;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
@@ -51,6 +52,14 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 				}
 			});
 		}
+
+		((App)getApplication()).getReplaioAdConfig().configure(findViewById(R.id.replaioAdView));
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		((App)getApplication()).getReplaioAdConfig().refreshSettings();
 	}
 
 	@Override

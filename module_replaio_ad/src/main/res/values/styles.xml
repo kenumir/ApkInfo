@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="replaio_ad_InstallButton" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/replaio_ad_colorAccent</item>
+    </style>
+
+</resources>
