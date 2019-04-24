@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 
 public class ReplaioAdView extends FrameLayout {
 
+    private OnInstallButtonClick mOnInstallButtonClick;
+
     public ReplaioAdView(Context context) {
         super(context);
         init(context);
@@ -33,24 +35,35 @@ public class ReplaioAdView extends FrameLayout {
         init(context);
     }
 
+    public void setOnInstallButtonClick(OnInstallButtonClick o) {
+        mOnInstallButtonClick = o;
+    }
+
     private void init(final Context context) {
-        View childView = LayoutInflater.from(context).inflate(R.layout.reaplaio_ad_view, this, false);
-        childView.findViewById(R.id.replaio_ad_installBtn).setOnClickListener(v -> {
-            try {
-                context.startActivity(
-                        new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE + ReplaioAdConfig.REFERRER))
-                );
-            } catch (Exception e) {
+        try {
+            View childView = LayoutInflater.from(context).inflate(R.layout.reaplaio_ad_view, this, false);
+            childView.findViewById(R.id.replaio_ad_installBtn).setOnClickListener(v -> {
                 try {
                     context.startActivity(
-                            new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE + ReplaioAdConfig.REFERRER))
+                            new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE + ReplaioAdConfig.REFERRER))
                     );
-                } catch (Exception e2) {
-                    // ignore
+                } catch (Exception e) {
+                    try {
+                        context.startActivity(
+                                new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + ReplaioAdConfig.REPLAIO_PACKAGE + ReplaioAdConfig.REFERRER))
+                        );
+                    } catch (Exception e2) {
+                        // ignore
+                    }
                 }
-            }
-        });
-        addView(childView);
+                if (mOnInstallButtonClick != null) {
+                    mOnInstallButtonClick.onInstallButtonClick();
+                }
+            });
+            addView(childView);
+        } catch (Exception e) {
+
+        }
     }
 
 }

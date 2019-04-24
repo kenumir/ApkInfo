@@ -6,12 +6,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class ReplaioAdConfig {
 
@@ -32,9 +32,10 @@ public class ReplaioAdConfig {
     private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            configure(mReplaioAdView);
+            configure(mReplaioAdView, mOnInstallButtonClick);
         }
     };
+    private OnInstallButtonClick mOnInstallButtonClick;
 
     public ReplaioAdConfig(@NonNull Context ctx) {
         mContext = ctx.getApplicationContext();
@@ -54,9 +55,11 @@ public class ReplaioAdConfig {
         });
     }
 
-    public void configure(@Nullable ReplaioAdView view) {
+    public void configure(@Nullable ReplaioAdView view, @Nullable OnInstallButtonClick ocl) {
+        mOnInstallButtonClick = ocl;
         mReplaioAdView = view;
         if (isReplaioInstalled != null && mReplaioAdView != null) {
+            mReplaioAdView.setOnInstallButtonClick(mOnInstallButtonClick);
             mReplaioAdView.setVisibility(!isReplaioInstalled ? View.VISIBLE : View.GONE);
         }
     }

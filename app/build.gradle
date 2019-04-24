@@ -11,8 +11,8 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 17
-        versionName "1.2.4"
+        versionCode 18
+        versionName "1.2.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -95,14 +95,11 @@ dependencies {
     implementation libraries.google.firebase.perf
 
     implementation libraries.squareup.picasso
-    //implementation libraries.butterknife
-    //annotationProcessor libraries.butterknifeCompiler
 
     implementation libraries.hivedi.console
     implementation libraries.hivedi.era
 
     implementation libraries.materialDialogs
-    //implementation libraries.anrwatchdog
     implementation libraries.crashlytics
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

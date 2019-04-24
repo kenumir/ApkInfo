@@ -14,20 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.SearchEvent;
-import com.hivedi.console.Console;
-import com.wt.apkinfo.BuildConfig;
-import com.wt.apkinfo.R;
-import com.wt.apkinfo.activity.ApplicationDetailsActivity;
-import com.wt.apkinfo.dialog.RateAppDialog;
-import com.wt.apkinfo.entity.ApplicationEntity;
-import com.wt.apkinfo.util.ImageLoader;
-import com.wt.apkinfo.util.UserEngagement;
-import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -37,6 +23,22 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SearchEvent;
+import com.hivedi.console.Console;
+import com.wt.apkinfo.BuildConfig;
+import com.wt.apkinfo.R;
+import com.wt.apkinfo.activity.ApplicationDetailsActivity;
+import com.wt.apkinfo.dialog.RateAppDialog;
+import com.wt.apkinfo.entity.ApplicationEntity;
+import com.wt.apkinfo.util.ImageLoader;
+import com.wt.apkinfo.util.IntentHelper;
+import com.wt.apkinfo.util.UserEngagement;
+import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,14 +126,14 @@ public class ApplicationsFragment extends Fragment {
 		menu.add(R.string.main_menu_about)
 			.setOnMenuItemClickListener(menuItem -> {
 				if (getActivity() != null) {
-					//new MaterialDialog(getActivity())
-					//		.setTitle(R.string.about_title)
-					//		.(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
-					//		.positiveText(R.string.label_close)
-					//		.neutralText(R.string.about_open)
-					//		.onNeutral((dialog, which) -> IntentHelper.openInBrowser(getActivity(), "https://twitter.com/kenumir"))
-					//		.build()
-					//		.show();
+					new MaterialDialog.Builder(getActivity())
+							.title(R.string.about_title)
+							.content(getResources().getString(R.string.about_desc, BuildConfig.VERSION_NAME))
+							.positiveText(R.string.label_close)
+							.neutralText(R.string.about_open)
+							.onNeutral((dialog, which) -> IntentHelper.openInBrowser(getActivity(), "https://twitter.com/kenumir"))
+							.build()
+							.show();
 				}
 				return false;
 			})

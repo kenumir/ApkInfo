@@ -3,9 +3,12 @@ package com.wt.apkinfo.activity;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.era.ERA;
 import com.wt.apkinfo.App;
@@ -13,10 +16,9 @@ import com.wt.apkinfo.R;
 import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
 import com.wt.apkinfo.util.UserEngagement;
+import com.wt.replaioad.OnInstallButtonClick;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class MainActivity extends AppCompatActivity implements InstallReferrerStateListener {
+public class MainActivity extends AppCompatActivity implements InstallReferrerStateListener, OnInstallButtonClick {
 
 	private InstallReferrerClient mReferrerClient;
 	private ApplicationsFragment mApplicationsFragment;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 			});
 		}
 
-		((App)getApplication()).getReplaioAdConfig().configure(findViewById(R.id.replaioAdView));
+		((App)getApplication()).getReplaioAdConfig().configure(findViewById(R.id.replaioAdView), this);
 	}
 
 	@Override
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 	public void onInstallReferrerSetupFinished(int responseCode) {
 		ERA.log("onInstallReferrerSetupFinished: responseCode=" + responseCode);
 		if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
-			// TODO send info
 			try {
 				ReferrerDetails response = mReferrerClient.getInstallReferrer();
 				ERA.log("onInstallReferrerSetupFinished: InstallReferrer=" + response.getInstallReferrer());
@@ -89,5 +90,10 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 		} else {
 			super.onBackPressed();
 		}
+	}
+
+	@Override
+	public void onInstallButtonClick() {
+		FirebaseAnalytics.getInstance(getApplicationContext()).logEvent("replaio_ad_click", null);
 	}
 }

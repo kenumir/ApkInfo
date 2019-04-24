@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.customListAdapter
-import com.afollestad.materialdialogs.list.getRecyclerView
 import com.wt.apkinfo.R
 import com.wt.apkinfo.entity.ComponentInfo
 
@@ -36,11 +35,17 @@ class InfoListDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val title = if (arguments != null) arguments!!.getString(KEY_TITLE, "List") else "List"
-        val dialog = MaterialDialog(this.activity!!)
-                .title(0, title)
-                .positiveButton(R.string.label_close)
-                .customListAdapter(ListItemsAdapter(mOnGetData!!.onGetData()))
-        dialog.setTitle(title)
+        val dialog = MaterialDialog.Builder(this.activity!!)
+                .title(title)
+                .positiveText(R.string.label_close)
+                .adapter(ListItemsAdapter(mOnGetData!!.onGetData()), LinearLayoutManager(this.activity!!))
+                .build()
+
+        //val dialog = MaterialDialog(this.activity!!)
+        //        .title(0, title)
+        //        .positiveButton(R.string.label_close)
+        //        .customListAdapter(ListItemsAdapter(mOnGetData!!.onGetData()))
+        //dialog.setTitle(title)
         dialog.getRecyclerView().addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
         return dialog
     }

@@ -3,8 +3,9 @@ package com.wt.apkinfo;
 import android.app.Application;
 import android.os.StrictMode;
 
+import androidx.annotation.NonNull;
+
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
@@ -12,7 +13,6 @@ import com.hivedi.era.ReportInterface;
 import com.wt.apkinfo.util.ImageLoader;
 import com.wt.replaioad.ReplaioAdConfig;
 
-import androidx.annotation.NonNull;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -42,7 +42,7 @@ public class App extends Application {
 		}
 
 		final Fabric fabric = new Fabric.Builder(this)
-				.kits(new Crashlytics(), new Answers())
+				.kits(new Crashlytics())
 				.debuggable(true)
 				.build();
 		Fabric.with(fabric);
