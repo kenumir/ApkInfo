@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 public class ReplaioAdView extends FrameLayout {
 
     private OnInstallButtonClick mOnInstallButtonClick;
+    private OnInflateError mOnInflateError;
 
     public ReplaioAdView(Context context) {
         super(context);
@@ -39,6 +40,10 @@ public class ReplaioAdView extends FrameLayout {
         mOnInstallButtonClick = o;
     }
 
+    public void setOnInflateError(OnInflateError o) {
+        mOnInflateError = o;
+    }
+
     private void init(final Context context) {
         try {
             View childView = LayoutInflater.from(context).inflate(R.layout.reaplaio_ad_view, this, false);
@@ -62,7 +67,9 @@ public class ReplaioAdView extends FrameLayout {
             });
             addView(childView);
         } catch (Exception e) {
-
+            if (mOnInflateError != null) {
+                mOnInflateError.onInflateError(e);
+            }
         }
     }
 

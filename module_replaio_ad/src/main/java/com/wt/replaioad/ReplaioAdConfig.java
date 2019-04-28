@@ -32,10 +32,15 @@ public class ReplaioAdConfig {
     private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            configure(mReplaioAdView, mOnInstallButtonClick);
+            configure(mReplaioAdView);
+            if (mReplaioAdView != null) {
+                mReplaioAdView.setOnInstallButtonClick(mOnInstallButtonClick);
+                mReplaioAdView.setOnInflateError(mOnInflateError);
+            }
         }
     };
     private OnInstallButtonClick mOnInstallButtonClick;
+    private OnInflateError mOnInflateError;
 
     public ReplaioAdConfig(@NonNull Context ctx) {
         mContext = ctx.getApplicationContext();
@@ -48,24 +53,29 @@ public class ReplaioAdConfig {
                 PackageInfo info = mContext.getPackageManager().getPackageInfo(REPLAIO_PACKAGE, 0);
                 isReplaioInstalled = info != null;
             } catch (Exception e) {
-                e.printStackTrace();
                 isReplaioInstalled = false;
             }
             mHandler.post(mRunnable);
         });
     }
 
-    public void configure(@Nullable ReplaioAdView view, @Nullable OnInstallButtonClick ocl) {
-        mOnInstallButtonClick = ocl;
+    public void configure(@Nullable ReplaioAdView view) {
         mReplaioAdView = view;
         if (isReplaioInstalled != null && mReplaioAdView != null) {
-            mReplaioAdView.setOnInstallButtonClick(mOnInstallButtonClick);
             mReplaioAdView.setVisibility(!isReplaioInstalled ? View.VISIBLE : View.GONE);
         }
     }
 
-    public void refreshSettings() {
-        setup();
+    public void onActivityStart(@Nullable OnInstallButtonClick ocl, @Nullable OnInflateError inflate) {
+        mOnInstallButtonClick = ocl;
+        mOnInflateError = inflate;
+        mReplaioAdView.setOnInstallButtonClick(mOnInstallButtonClick);
+        mReplaioAdView.setOnInflateError(mOnInflateError);
+    }
+
+    public void onActivityStop() {
+        mOnInstallButtonClick = null;
+        mOnInflateError = null;
     }
 
 }

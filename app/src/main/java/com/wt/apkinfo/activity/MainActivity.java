@@ -16,9 +16,10 @@ import com.wt.apkinfo.R;
 import com.wt.apkinfo.dialog.RateAppDialog;
 import com.wt.apkinfo.fragment.ApplicationsFragment;
 import com.wt.apkinfo.util.UserEngagement;
+import com.wt.replaioad.OnInflateError;
 import com.wt.replaioad.OnInstallButtonClick;
 
-public class MainActivity extends AppCompatActivity implements InstallReferrerStateListener, OnInstallButtonClick {
+public class MainActivity extends AppCompatActivity implements InstallReferrerStateListener, OnInstallButtonClick, OnInflateError {
 
 	private InstallReferrerClient mReferrerClient;
 	private ApplicationsFragment mApplicationsFragment;
@@ -55,13 +56,19 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 			});
 		}
 
-		((App)getApplication()).getReplaioAdConfig().configure(findViewById(R.id.replaioAdView), this);
+		((App)getApplication()).getReplaioAdConfig().configure(findViewById(R.id.replaioAdView));
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		((App)getApplication()).getReplaioAdConfig().refreshSettings();
+	protected void onStart() {
+		super.onStart();
+		((App)getApplication()).getReplaioAdConfig().onActivityStart(this, this);
+	}
+
+	@Override
+	protected void onStop() {
+		((App)getApplication()).getReplaioAdConfig().onActivityStop();
+		super.onStop();
 	}
 
 	@Override
@@ -95,5 +102,10 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 	@Override
 	public void onInstallButtonClick() {
 		FirebaseAnalytics.getInstance(getApplicationContext()).logEvent("replaio_ad_click", null);
+	}
+
+	@Override
+	public void onInflateError(Exception e) {
+		ERA.logException(e);
 	}
 }
