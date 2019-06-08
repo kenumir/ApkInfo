@@ -1,6 +1,11 @@
 package com.wt.apkinfo.fragment;
 
 
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -38,7 +43,9 @@ import com.wt.apkinfo.util.IntentHelper;
 import com.wt.apkinfo.util.UserEngagement;
 import com.wt.apkinfo.viewmodel.ApplicationListViewModel;
 
+import java.security.MessageDigest;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -122,6 +129,65 @@ public class ApplicationsFragment extends Fragment {
 			search.setQuery(searchText, false);
 			searchMenuItem.expandActionView();
 		}
+
+		menu.add("Export applications info").setOnMenuItemClickListener(item -> {
+			new Thread(){
+				@Override
+				public void run() {
+					final StringBuilder sb = new StringBuilder();
+					sb.append("app_id;app_name;version;version_name;installer_package;first_install_timestamp;siganture").append("\n");
+					try {
+						Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+						mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+						PackageManager pm = getActivity().getPackageManager();
+						List<ResolveInfo> pkgAppsList = pm.queryIntentActivities(mainIntent, 0);
+						if (pkgAppsList != null && pkgAppsList.size() > 0) {
+							for(ResolveInfo ri : pkgAppsList) {
+								// package, name, version, version name, installer package, first install timestamp
+								String appId = ri.activityInfo.packageName;
+								sb.append(appId).append(";");
+								sb.append(ri.activityInfo.loadLabel(pm).toString()).append(";");
+								PackageInfo pi = pm.getPackageInfo(appId, PackageManager.GET_ACTIVITIES);
+								sb.append(pi.versionCode).append(";");
+								sb.append(pi.versionName).append(";");
+								sb.append(pm.getInstallerPackageName(appId)).append(";");
+								sb.append(pi.firstInstallTime).append(";");
+
+								String sig = "";
+								try {
+									pi = pm.getPackageInfo(appId, PackageManager.GET_SIGNATURES);
+									if (pi.signatures != null) {
+										MessageDigest md = MessageDigest.getInstance("SHA");
+										Signature ai = pi.signatures[0];
+										md.update(ai.toByteArray());
+										StringBuilder s = new StringBuilder();
+										for (byte b : md.digest()) {
+											s.append(":").append(String.format("%02x", b));
+										}
+										sig = s.substring(1).toUpperCase(Locale.US);
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								sb.append(sig).append("\n");
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							Intent intent2 = new Intent(); intent2.setAction(Intent.ACTION_SEND);
+							intent2.setType("text/plain");
+							intent2.putExtra(Intent.EXTRA_TEXT, sb.toString() );
+							startActivity(Intent.createChooser(intent2, "Info"));
+						}
+					});
+				}
+			}.start();
+			return false;
+		});
 
 		menu.add(R.string.main_menu_about)
 			.setOnMenuItemClickListener(menuItem -> {
