@@ -11,8 +11,8 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 21
-        versionName "1.2.8"
+        versionCode 22
+        versionName "1.2.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -91,7 +91,7 @@ dependencies {
     implementation libraries.android.installreferrer
 
     implementation libraries.google.material
-    implementation libraries.google.firebase.core
+    implementation libraries.google.firebase.analytics
     implementation libraries.google.firebase.perf
 
     implementation libraries.squareup.picasso
