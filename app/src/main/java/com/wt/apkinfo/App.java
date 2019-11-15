@@ -6,7 +6,6 @@ import android.os.StrictMode;
 import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.hivedi.era.ReportInterface;
@@ -27,7 +26,6 @@ public class App extends Application {
 	private UserInfo mUserInfo;
 
 	@Override
-	@AddTrace(name = "App_onCreate")
 	public void onCreate() {
 		if (BuildConfig.DEBUG) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -45,7 +43,6 @@ public class App extends Application {
 
 		final Fabric fabric = new Fabric.Builder(this)
 				.kits(new Crashlytics())
-				.debuggable(true)
 				.build();
 		Fabric.with(fabric);
 

@@ -10,4 +10,12 @@
 
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#B1B1B1</color>
+    <color name="text_on_primary">#FFFFFFFF</color>
+
+    <color name="rate_button_bg">#FFFFFFFF</color>
+    <color name="rate_button_text">#FF000000</color>
+    <color name="rate_button_sec_bg">#FFFF9E80</color>
+    <color name="rate_button_sec_text">#FF000000</color>
+    <color name="rate_normal">#FFFF9E80</color>
+    <color name="rate_selected">#FFFFFFFF</color>
 </resources>

@@ -2,6 +2,7 @@ package com.wt.apkinfo.activity;
 
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.TextUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +10,6 @@ import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.perf.metrics.AddTrace;
 import com.hivedi.era.ERA;
 import com.wt.apkinfo.App;
 import com.wt.apkinfo.R;
@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 	private ApplicationsFragment mApplicationsFragment;
 
 	@Override
-	@AddTrace(name = "MainActivity_onCreate")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -40,13 +39,6 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 					.commit();
 		}
 
-		mReferrerClient = InstallReferrerClient.newBuilder(this).build();
-		try {
-			mReferrerClient.startConnection(this);
-		} catch (Exception e) {
-			ERA.logException(e);
-		}
-
 		if (savedInstanceState == null) {
 			UserEngagement.showRateDialog(this, () -> {
 				if (!isFinishing()) {
@@ -54,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 					UserEngagement.markRateDialogAsOpened(getApplicationContext());
 				}
 			});
+
+			String ir = ((App)getApplication()).getUserInfo().getInstallReferrer();
+			if (TextUtils.isEmpty(ir)) {
+				mReferrerClient = InstallReferrerClient.newBuilder(this).build();
+				try {
+					mReferrerClient.startConnection(this);
+				} catch (Exception e) {
+					ERA.logException(e);
+				}
+			}
 		}
 
 		((App)getApplication()).getReplaioAdConfig().configure(findViewById(R.id.replaioAdView));
@@ -77,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 		if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
 			try {
 				ReferrerDetails response = mReferrerClient.getInstallReferrer();
-				ERA.log("onInstallReferrerSetupFinished: InstallReferrer=" + response.getInstallReferrer());
+				String ir = response.getInstallReferrer();
+				ERA.log("onInstallReferrerSetupFinished: InstallReferrer=" + ir);
+				((App)getApplication()).getUserInfo().saveInstallReferrer(ir);
 				mReferrerClient.endConnection();
 			} catch (RemoteException e) {
 				ERA.logException(e);

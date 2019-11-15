@@ -7,17 +7,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
 
-import com.google.firebase.perf.metrics.AddTrace;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class StartActivity extends AppCompatActivity {
 
 	@SuppressLint("SetTextI18n")
 	@Override
-	@AddTrace(name = "StartActivity_onCreate")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);

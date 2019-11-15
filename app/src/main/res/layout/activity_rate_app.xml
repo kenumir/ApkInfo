@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="72dp"
+                android:textSize="25sp"
+                android:textColor="@color/text_on_primary"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:lineSpacingMultiplier="1.2"
+                android:text="Jak bardzo podoba Ci się Apk Info?"/>
+
+            <RatingBar
+                style="@style/RatingBar"
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:numStars="5"
+                android:stepSize="1.0"/>
+
+            <Button
+                android:onClick="handleRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="200dp"
+                android:layout_marginTop="16dp"
+                android:text="Wyślij"
+                android:textColor="@color/rate_button_text"
+                android:backgroundTint="@color/rate_button_bg"/>
+
+            <Button
+                android:onClick="handleClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="150dp"
+                android:layout_marginTop="8dp"
+                android:text="Już oceniłem"
+                android:textColor="@color/rate_button_sec_text"
+                android:backgroundTint="@color/rate_button_sec_bg"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

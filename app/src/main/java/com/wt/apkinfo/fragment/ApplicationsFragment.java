@@ -33,10 +33,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
 import com.hivedi.console.Console;
+import com.wt.apkinfo.App;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
-import com.wt.apkinfo.dialog.RateAppDialog;
+import com.wt.apkinfo.activity.RateAppActivity;
 import com.wt.apkinfo.entity.ApplicationEntity;
 import com.wt.apkinfo.util.ImageLoader;
 import com.wt.apkinfo.util.IntentHelper;
@@ -60,20 +61,17 @@ public class ApplicationsFragment extends Fragment {
 	private ApplicationsListAdapter adapter;
 	private String searchText = null;
 	private Handler searchHandler = new Handler(Looper.getMainLooper());
-    private Runnable searchAction = new Runnable() {
-        @Override
-        public void run() {
-            if (isAdded()) {
-                if (BuildConfig.DEBUG) {
-                    Console.logd("search: " + searchText);
-                }
-                Answers.getInstance().logSearch(new SearchEvent().putQuery(searchText));
-                ViewModelProviders.of(ApplicationsFragment.this)
-                        .get(ApplicationListViewModel.class)
-                        .search(searchText);
-            }
-        }
-    };
+    private Runnable searchAction = () -> {
+		if (isAdded()) {
+			if (BuildConfig.DEBUG) {
+				Console.logd("search: " + searchText);
+			}
+			Answers.getInstance().logSearch(new SearchEvent().putQuery(searchText));
+			ViewModelProviders.of(ApplicationsFragment.this)
+					.get(ApplicationListViewModel.class)
+					.search(searchText);
+		}
+	};
     private SearchView search;
     private MenuItem searchMenuItem;
 
@@ -175,14 +173,11 @@ public class ApplicationsFragment extends Fragment {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
-						@Override
-						public void run() {
-							Intent intent2 = new Intent(); intent2.setAction(Intent.ACTION_SEND);
-							intent2.setType("text/plain");
-							intent2.putExtra(Intent.EXTRA_TEXT, sb.toString() );
-							startActivity(Intent.createChooser(intent2, "Info"));
-						}
+					new Handler(Looper.getMainLooper()).post(() -> {
+						Intent intent2 = new Intent(); intent2.setAction(Intent.ACTION_SEND);
+						intent2.setType("text/plain");
+						intent2.putExtra(Intent.EXTRA_TEXT, sb.toString() );
+						startActivity(Intent.createChooser(intent2, "Info"));
 					});
 				}
 			}.start();
@@ -206,14 +201,17 @@ public class ApplicationsFragment extends Fragment {
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		menu.add(R.string.rate_title)
                 .setOnMenuItemClickListener(item -> {
-					if (getFragmentManager() != null) {
-						RateAppDialog d = new RateAppDialog();
-						d.setTargetFragment(ApplicationsFragment.this, 1);
-						d.show(getFragmentManager(), "rate");
-					}
+					startActivity(new Intent(getActivity(), RateAppActivity.class));
 					return false;
 				})
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+		if (BuildConfig.DEBUG) {
+		    menu.add("[DEV] Install Referrer store").setOnMenuItemClickListener(item -> {
+				((App) getActivity().getApplication()).getUserInfo().saveInstallReferrer("Test-" + System.currentTimeMillis());
+				return false;
+			});
+        }
 		return res;
 	}
 
@@ -254,9 +252,11 @@ public class ApplicationsFragment extends Fragment {
 	public boolean onBackAction() {
         if (searchText != null && searchText.length() > 0) {
 			search.setQuery(null, true);
-			searchMenuItem.collapseActionView();
             return true;
-        }
+        } else if (searchMenuItem.isActionViewExpanded()) {
+			searchMenuItem.collapseActionView();
+			return true;
+		}
         return false;
 	}
 

@@ -13,8 +13,17 @@
         <item name="android:windowBackground">@drawable/app_start_logo</item>
     </style>
 
+    <style name="RateAppTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/rate_normal</item>
+        <item name="colorControlActivated">@color/rate_selected</item>
+    </style>
 
 </resources>

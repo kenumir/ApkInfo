@@ -1,1 +1,4 @@
 /build
+/src/main/java/com/wt/userinfo/UserInfo.java
+/src/main/java/com/wt/userinfo/SaveInstallReferrerWork.java
+/src/main/java/com/wt/userinfo/SaveUserInfoWork.java
