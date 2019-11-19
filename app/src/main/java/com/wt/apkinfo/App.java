@@ -10,7 +10,6 @@ import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.hivedi.era.ReportInterface;
 import com.wt.apkinfo.util.ImageLoader;
-import com.wt.replaioad.ReplaioAdConfig;
 import com.wt.userinfo.UserInfo;
 
 import io.fabric.sdk.android.Fabric;
@@ -22,7 +21,6 @@ import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
 
-	private ReplaioAdConfig mReplaioAdConfig;
 	private UserInfo mUserInfo;
 
 	@Override
@@ -62,7 +60,6 @@ public class App extends Application {
 
 		ImageLoader.init(getApplicationContext());
 
-		mReplaioAdConfig = new ReplaioAdConfig(this);
 		mUserInfo = UserInfo.setup(this, BuildConfig.VERSION_NAME);
 	}
 
@@ -71,8 +68,4 @@ public class App extends Application {
 		return mUserInfo;
 	}
 
-	@NonNull
-	public ReplaioAdConfig getReplaioAdConfig() {
-		return mReplaioAdConfig;
-	}
 }

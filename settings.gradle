@@ -1,1 +1,1 @@
-include ':app', ':module_replaio_ad', ':module_user_info'
+include ':app', ':module_user_info'
