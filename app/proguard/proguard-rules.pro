@@ -19,3 +19,5 @@
 -keep class com.wt.pinger.providers.data.** { *; }
 -keep class com.wt.pinger.data.api.** { *; }
 -keep class com.wt.pinger.data.api.NewsUser  { *; }
+
+-keepclassmembers class com.wt.apkinfo.viewmodel.files.FileListModel { public *; }
