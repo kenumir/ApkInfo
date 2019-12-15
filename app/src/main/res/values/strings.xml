@@ -33,6 +33,7 @@
     <string name="app_details_play_store">Search in Play Store</string>
     <string name="app_details_run">Run</string>
     <string name="app_details_none">None</string>
+    <string name="app_no_apk_files">No APK files available</string>
 
     <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">Error load application info</string>

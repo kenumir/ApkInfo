@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
+import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.wt.apkinfo.App;
 import com.wt.apkinfo.R;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements InstallReferrerSt
 			try {
 				ReferrerDetails response = mReferrerClient.getInstallReferrer();
 				String ir = response.getInstallReferrer();
+				Console.logi("InstallReferrer=" + ir);
 				ERA.log("onInstallReferrerSetupFinished: InstallReferrer=" + ir);
 				((App)getApplication()).getUserInfo().saveInstallReferrer(ir);
 				mReferrerClient.endConnection();

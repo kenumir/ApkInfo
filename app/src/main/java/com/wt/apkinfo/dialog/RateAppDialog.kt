@@ -34,7 +34,7 @@ class RateAppDialog : DialogFragment() {
         return MaterialDialog.Builder(activity!!)
                 .title(R.string.rate_title)
                 .positiveText(R.string.label_ok)
-                .onPositive { dialog, which ->  kotlin.run {
+                .onPositive { dialog, _ ->  kotlin.run {
                     val r = dialog.getCustomView()?.findViewById<RatingBar>(R.id.ratingBar)?.getRating()
                     if (r == 5f) {
                         VariousUtil.openInPlayStore(activity)

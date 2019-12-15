@@ -29,7 +29,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.FileProvider;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -38,8 +37,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.crashlytics.android.Crashlytics;
-import com.hivedi.console.Console;
 import com.hivedi.era.ERA;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -137,7 +134,12 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 					mAppInfoAdapter.setData(productEntity);
 					supportStartPostponedEnterTransition();
 					shareMenuItem.setOnMenuItemClickListener(menuItem -> {
+						ApkListActivity.start(ApplicationDetailsActivity.this, appId, appName, new File(productEntity.apkFile).getParent());
+
+						/*
 						try {
+							File dir = new File(productEntity.apkFile).getParentFile();
+
 							File srcFile = new File(productEntity.apkFile);
 							Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider", srcFile);
 							Intent share = new Intent();
@@ -151,6 +153,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 							Console.loge("e=" + e, e);
 							Crashlytics.logException(e);
 						}
+						 */
 						return false;
 					}).setVisible(true);
                     appInfoMenu.setOnMenuItemClickListener(menuItem -> {
