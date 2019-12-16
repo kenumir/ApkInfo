@@ -33,17 +33,17 @@ public class ApkListActivity extends AppCompatActivity implements OnFileItemClic
 
     private static final String KEY_APP_ID = "application_id";
     private static final String KEY_APP_NAME = "application_name";
-    private static final String KEY_APP_DIR = "application_dir";
+    private static final String KEY_APP_BASE_APK = "application_base_apk";
 
-    public static void start(@NonNull Context ctx, @NonNull String appId, @NonNull String appName, String dir) {
+    public static void start(@NonNull Context ctx, @NonNull String appId, @NonNull String appName, String baseApk) {
         Intent it = new Intent(ctx, ApkListActivity.class);
         it.putExtra(KEY_APP_ID, appId);
         it.putExtra(KEY_APP_NAME, appName);
-        it.putExtra(KEY_APP_DIR, dir);
+        it.putExtra(KEY_APP_BASE_APK, baseApk);
         ctx.startActivity(it);
     }
 
-    private String dir;
+    private String baseApk;
     private View overlayFrame;
     private RecyclerView recycler;
 
@@ -54,9 +54,9 @@ public class ApkListActivity extends AppCompatActivity implements OnFileItemClic
 
         String appId = getIntent().getStringExtra(KEY_APP_ID);
         String appName = getIntent().getStringExtra(KEY_APP_NAME);
-        dir = getIntent().getStringExtra(KEY_APP_DIR);
+        baseApk = getIntent().getStringExtra(KEY_APP_BASE_APK);
 
-        FileListViewModelFactory factory = new FileListViewModelFactory(dir);
+        FileListViewModelFactory factory = new FileListViewModelFactory(baseApk);
         FileListModel mFileListModel = ViewModelProviders.of(this, factory).get(FileListModel.class);
 
         overlayFrame = findViewById(R.id.overlayFrame);
@@ -98,7 +98,8 @@ public class ApkListActivity extends AppCompatActivity implements OnFileItemClic
     @Override
     public void onFileItemClick(FileItem item) {
         try {
-            File apkFile = new File(dir, item.name);
+            Console.logi("item: " + item);
+            File apkFile = new File(item.fullName);
             Uri apkURI = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider", apkFile);
             Intent share = new Intent();
             share.setAction(Intent.ACTION_SEND);

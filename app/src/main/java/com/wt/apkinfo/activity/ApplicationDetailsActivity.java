@@ -50,7 +50,6 @@ import com.wt.apkinfo.util.ImageLoader;
 import com.wt.apkinfo.util.ViewUtil;
 import com.wt.apkinfo.viewmodel.ApplicationDetailsViewModel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,26 +133,12 @@ public class ApplicationDetailsActivity extends AppCompatActivity implements Inf
 					mAppInfoAdapter.setData(productEntity);
 					supportStartPostponedEnterTransition();
 					shareMenuItem.setOnMenuItemClickListener(menuItem -> {
-						ApkListActivity.start(ApplicationDetailsActivity.this, appId, appName, new File(productEntity.apkFile).getParent());
-
-						/*
-						try {
-							File dir = new File(productEntity.apkFile).getParentFile();
-
-							File srcFile = new File(productEntity.apkFile);
-							Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider", srcFile);
-							Intent share = new Intent();
-							share.setAction(Intent.ACTION_SEND);
-							share.setType("application/vnd.android.package-archive");
-							share.putExtra(Intent.EXTRA_STREAM, photoURI);
-							share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-							startActivity(Intent.createChooser(share, getResources().getString(R.string.app_details_share)));
-							Console.logi("file=" + srcFile);
-						} catch (Exception e) {
-							Console.loge("e=" + e, e);
-							Crashlytics.logException(e);
-						}
-						 */
+						ApkListActivity.start(
+								ApplicationDetailsActivity.this,
+								appId,
+								appName,
+								productEntity.apkFile
+						);
 						return false;
 					}).setVisible(true);
                     appInfoMenu.setOnMenuItemClickListener(menuItem -> {

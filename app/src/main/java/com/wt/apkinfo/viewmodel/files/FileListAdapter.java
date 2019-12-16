@@ -32,7 +32,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListHolder>{
     @Override
     public void onBindViewHolder(@NonNull FileListHolder holder, int position) {
         if (items.size() == 0) {
-            holder.update(new FileItem(mContext.getResources().getString(R.string.app_no_apk_files), -1), null);
+            holder.update(new FileItem(mContext.getResources().getString(R.string.app_no_apk_files), -1, null), null);
         } else {
             holder.update(items.get(position), mOnFileItemClick);
         }
