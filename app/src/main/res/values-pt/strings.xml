@@ -33,6 +33,7 @@
     <string name="app_details_play_store">Pesquisar na Play Store</string>
     <string name="app_details_run">Corrida</string>
     <string name="app_details_none">Nada</string>
+    <string name="app_no_apk_files">Nenhum arquivo APK disponível</string>
 
     <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">Erro ao carregar informações do aplicativo</string>

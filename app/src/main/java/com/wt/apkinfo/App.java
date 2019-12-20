@@ -12,8 +12,6 @@ import com.hivedi.era.ReportInterface;
 import com.wt.apkinfo.util.ImageLoader;
 import com.wt.userinfo.UserInfo;
 
-import io.fabric.sdk.android.Fabric;
-
 /**
  * Created by kenumir on 15.09.2017.
  *
@@ -39,10 +37,10 @@ public class App extends Application {
 			Console.addLogWriterLogCat();
 		}
 
-		final Fabric fabric = new Fabric.Builder(this)
-				.kits(new Crashlytics())
-				.build();
-		Fabric.with(fabric);
+		//final Fabric fabric = new Fabric.Builder(this)
+		//		.kits(new Crashlytics())
+		//		.build();
+		//Fabric.with(fabric);
 
 		ERA.registerAdapter(new ReportInterface() {
 			@Override

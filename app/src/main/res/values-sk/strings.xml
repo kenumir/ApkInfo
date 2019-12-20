@@ -33,6 +33,7 @@
     <string name="app_details_play_store">Vyhľadávanie v Play Store</string>
     <string name="app_details_run">Utekať</string>
     <string name="app_details_none">Nikto</string>
+    <string name="app_no_apk_files">Nie sú k dispozícii žiadne súbory APK</string>
 
     <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">Chyba pri načítaní informácií o aplikácii</string>

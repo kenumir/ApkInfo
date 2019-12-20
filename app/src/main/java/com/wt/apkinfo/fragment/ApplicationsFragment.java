@@ -30,10 +30,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
 import com.hivedi.console.Console;
-import com.wt.apkinfo.App;
 import com.wt.apkinfo.BuildConfig;
 import com.wt.apkinfo.R;
 import com.wt.apkinfo.activity.ApplicationDetailsActivity;
@@ -207,8 +207,8 @@ public class ApplicationsFragment extends Fragment {
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 		if (BuildConfig.DEBUG) {
-		    menu.add("[DEV] Install Referrer store").setOnMenuItemClickListener(item -> {
-				((App) getActivity().getApplication()).getUserInfo().saveInstallReferrer("Test-" + System.currentTimeMillis());
+		    menu.add("[DEV] Test Crash").setOnMenuItemClickListener(item -> {
+				Crashlytics.getInstance().crash();
 				return false;
 			});
         }

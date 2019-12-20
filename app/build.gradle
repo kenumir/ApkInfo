@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -10,8 +11,8 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 27
-        versionName "1.3.4"
+        versionCode 28
+        versionName "1.3.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -103,5 +104,3 @@ dependencies {
 
     implementation project(':module_user_info')
 }
-
-apply plugin: 'com.google.gms.google-services'

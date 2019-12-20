@@ -33,6 +33,7 @@
     <string name="app_details_play_store">Play Store में खोजें</string>
     <string name="app_details_run">रन</string>
     <string name="app_details_none">कोई नहीं</string>
+    <string name="app_no_apk_files">कोई एपीके फाइलें उपलब्ध नहीं हैं</string>
 
     <!-- Application details - toasts -->
     <string name="app_details_toast_load_info">त्रुटि जानकारी आवेदन जानकारी लोड करें</string>
