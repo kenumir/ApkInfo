@@ -1,11 +1,9 @@
 package com.wt.apkinfo.util;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -60,12 +58,15 @@ public class ImageLoader {
                     public Result load(Request request, int networkPolicy) throws IOException {
                         try {
                             // skip use BitmapUtil.drawableToBitmap, simple way to get bitmap
-                            Drawable d = pm.getApplicationIcon(request.uri.getHost());
-                            Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                            Canvas canvas = new Canvas(b);
-                            d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                            d.draw(canvas);
-                            return new Result(b, Picasso.LoadedFrom.DISK);
+                            String host = request.uri.getHost();
+                            if (host != null) {
+                                Drawable d = pm.getApplicationIcon(host);
+                                Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                                Canvas canvas = new Canvas(b);
+                                d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                                d.draw(canvas);
+                                return new Result(b, Picasso.LoadedFrom.DISK);
+                            }
                         } catch (Exception e) {
                             if (BuildConfig.DEBUG) {
                                 Console.loge("ImageLoader.load: " + e, e);
